@@ -1,0 +1,54 @@
+* {
+	border-radius: 5px;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	color: #696969;
+}
+
+select {
+	display:block;
+}
+
+canvas {
+	width: 700px;
+	height: 300px;
+	border: 1px dashed green;
+}
+
+table {
+	width: 100%;
+}
+
+table.tb tr td {
+	border: 1px solid black;
+	width: 95px;
+}
+
+table.tb tr th {
+	border: 1px solid black;
+	width: 95px;
+}
+
+table.tb tr td.date {
+	border: 2px solid red;
+	width: 95px;
+}
+
+table.tb tr th.date {
+	border: 2px solid red;
+	width: 95px;
+}
+
+.main {
+	display: block;
+	width: 1000px;
+	height: 100%;
+	border: 1px solid black;
+}
+
+.days {
+	text-align: center;
+}

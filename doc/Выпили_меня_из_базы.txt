@@ -1,0 +1,5 @@
+delete from testoperations where TestId = (
+select id from Test where DateKey = (select id from date where Date
+ = '2013-06-25'));
+delete from test where datekey = (select id from Date where date =
+'2013-06-25');

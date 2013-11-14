@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheets" href="testjson.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script src="assets/script.js"></script>
+		<script src="assets/Chart.js"></script>
+		<!-- <link href="table.json" /> -->
+	</head>
+	<body>
+	<center>
+		<h3>Результаты тестирования производительности КИС "Восточный Экспресс"</h3>
+			<div class="main">
+				<table>
+					<tr>
+						<td>
+							Time
+						</td>
+						<td>
+							<canvas id="mainchart" width="700px" height="400px"></canvas>
+						</td>
+						<td>
+							<div>
+								Выбор элемента тестирования <br />
+								<select id="testname">
+								</select> <br />
+
+								Выбор периода тестирования <br />
+								<input id="begindate" type="date" /><br />
+								<input id="enddate" type="date" /><br />
+								<input id="chartgetter" type="button" value="Получить результаты"/><br />
+							</div> <br />
+							
+							Выбор отображаемого элемента <br />
+							<div id="releases"></div>
+							<input type="submit" id="drawCharts" value="Построить графики" />
+							
+							</canvas>
+						</td>
+					</tr>
+					<tr>
+						<td>
+						</td>
+						<td class="days">
+							Days
+						</td>
+						<td>
+						</td>
+					</tr>
+				<table>
+				<p>
+				</p>
+				<div>
+					<h3 id="numbers">Представление результатов в числовой форме
+						<input id="tablegetter" type="button" value="Получить результаты"/><br />
+					</h3>
+					<table class="tb">
+						<tr>
+							<th class="date">CurrentDate</th>
+							<th>Billing</th>
+							<th>PrintAct</th>
+							<th>PrintSF</th>
+							<th>PlanSumm</th>
+							<th>USR upload</th>
+							<th>REG upload</th>
+							<th>USR reports</th>
+							<th>etc...</th>
+							<th>etc...</th>
+						</tr>
+					</table>
+				</div>
+				<div>
+				</div>
+			</div>
+            <div id="easterEgg"><div id=welcomeDiv></div></div>
+	</center>
+	</body>
+</html>

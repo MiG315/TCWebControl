@@ -1,0 +1,64 @@
+create Table Date (
+Date TEXT,
+Id Integer PRIMARY KEY autoincrement
+);
+
+
+create table TestList(
+Name Text not null,
+TestSuiteName Text NOT NULL,
+TestDataRepository text Not Null,
+Id integer primary key autoincrement);
+
+create table Test(
+Id Integer primary key autoincrement,
+TestExecTime Integer Not null,
+DateKey integer,
+TestListId integer,
+foreign key(DateKey) references Date(Id),
+foreign key(TestListId) references TestList(Id));
+
+
+create table OperationList(
+Name Text not null,
+RepositoryName Text not null,
+Id integer primary key autoincrement,
+TestListId integer,
+foreign key(TestListId) references TestList(Id));
+
+create table TestOperations(
+TestExecTime integer not null,
+Id integer primary KEY autoincrement,
+TestId integer,
+OperationListId integer,
+foreign Key(TestId) references Test(Id),
+foreign key(OperationListId) references OperationList(Id));
+
+alter table Test add column Release integer;
+
+create table Release(
+Name text not null,
+RepositoryName text not null,
+Id integer Primary Key AutoIncrement )
+
+# since SQLite does not support Alter Table`s "add constraint"
+
+create table Test_New(
+Id Integer primary key autoincrement,
+TestExecTime Integer Not null,
+DateKey integer,
+TestListId integer,
+ReleaseId integer,
+foreign key(ReleaseId) references Release(Id),
+foreign key(DateKey) references Date(Id),
+foreign key(TestListId) references TestList(Id));
+
+insert into test_new select * from test;
+
+pragma foreign_keys = 0;
+
+drop table test;
+
+alter table test_new rename to test;
+
+pragma foreign_keys = 1;

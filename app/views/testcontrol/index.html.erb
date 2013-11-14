@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheets" href="testcontrol.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Play&subset=cyrillic' rel='stylesheet' type='text/css'>
+		<script src="/../assets/codemirror.js"></script>
+		<script src="/../assets/matchbrackets.js"></script>
+		<script src="/../assets/python.js"></script>
+		<script src="/../assets/jquery.jstree.js"></script>
+		<script src="/../assets/jstreegrid.js"></script>
+		<script src="/../assets/jquery.hotkeys.js"></script>
+		<script src="/../assets/testcontrol.js"></script>
+	</head>
+	<body>
+		<div>
+			<div style="text-align: center; background-color: lightgreen;">
+				<h2>Система управления тестовыми задачами. v<span id="version"></span></h2>
+				<div>_<div id="loaderScr"></div></div>
+			</div>
+			<div>
+				<span class="picker">Выберите компьютер</span>
+				<select id="comp" class="picker">
+					<option value="OE-027">OE-027</option>
+				</select>
+				<span class="picker">Выберите стэнд</span>
+				<select id="stand" class="picker">
+					<option value="Postgres">Postgres</option>
+				</select>
+			</div>
+			<div id="tabs">
+				<ul>
+					<li><a href="#testplan" id="testplanhref">Редактирование тестового плана</a></li>
+					<li><a href="#pythonscript" id="pythonscripthref">Редактирование Python скрипта</a></li>
+					<li><a href="#starttime" id="starttimehref">Редактирование времени запуска</a></li>
+				</ul>
+				<div id="testplan">
+					  <div class="savePanel">
+						<input type="button" value="Сохранить" id="saveMDS" /><br />
+						<select class="picker" id="nameMDS" />
+							<option value=""></option>
+						</select><br />
+						<input type="button" value="Сохранить под именем" id="saveMDSWithName" />
+					  </div>
+					  <div class="backuppanel">
+						<input type="button" value="Взять MDS из SVN" id="getMDSFromRepo" /><br />
+						<input type="button" value="Взять MDS из backup" id="getMDSFromBackup" /><br />
+						<input type="button" value="Сделать backup MDS" id="makeMDSBackup" />
+					  </div>
+					<div id="panel">
+					  <input type="button" value="Выбрать выделенные ноды" id="v" />
+					  <input type="button" value="Отменить выбор выделенных нод" id="x" />
+					</div>
+					<ul id="testsTree"></ul>
+				</div>
+				<div id="pythonscript">
+					<input type="button" value="Сохранить" id="savePython" />
+					<div class="backuppanel">
+					  <input type="button" value="Взять Settings из SVN" id="getPythonFromRepo" /><br />
+					  <input type="button" value="Взять Settings из backup" id="getPythonFromBackup" /><br />
+					  <input type="button" value="Сделать backup" id="makePythonBackup" />
+					</div>
+					<textarea id="plainscript"></textarea>
+				</div>
+				<div id="starttime">
+					<table id="tbtiming">
+						<tr>
+							<td><b>Название</b></td>
+							<td><b>Старое время</b></td>
+							<td><b>Новое время</b></td>
+						</tr>
+					</table>
+					<input type="button" value="Сохранить" id="savetiming" />
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
