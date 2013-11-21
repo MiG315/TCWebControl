@@ -56,7 +56,7 @@ $(document).ready(function() {
 	
 	function loadMDSCollection() {
 		$('#nameMDS').empty();
-		$.getJSON(sURL+'getmdscollection/', function(json) {
+		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
 			console.log("Building MDS list");
 			console.log(json)
 			$('#nameMDS').empty();
