@@ -93,7 +93,7 @@ class MDS
   # MDS id #2 - worker marker
   @workerName = "workerDefault"
   # MDS id #3 - release markker 
-  @releaseName = "releaseDefault"
+  @release = "releaseDefault"
   # MB owner??
   @owner = "ownerByDefault"
   # runtime marker - указывает на переодичность 
@@ -105,32 +105,53 @@ class MDS
   def initialize(_mdsName, _workerName, _releaseName)
     @name = _mdsName
     @workerName = _workerName
-    @releaseName = _releaseName
+    @release = _releaseName
+
   end
 
   # обновляет MDS и сохраняет выставленными тесты
-  def updateMDSGently(_newMDS)
+  def updateGently(_newMDS)
+    # делаем всю херню
+    the_very_updated_MDS = _newMDS
+    # сохраняем все говно
+    updateMDS(the_very_updated_MDS)
+    # устанавливаем дату последнего обновления
+    MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+  end
 
+  # проверить, есть ли MDS на базе
+  def Exists()
+    return MongoMDSConnector.instance.checkMdsForExistance(@name, @workerName, @release)
   end
 
   # обновляет MDS без учета предидущего состояния тестов
-  def updateMDS(_newMDS)
-
+  def update(_newMDS)
+    MongoMDSConnector.instance.setMds(@name, @workerName, @release, _newMDS)
+    # сразу устанавливаем время обновления
+    MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
   end
 
   # получить MDS
-  def getMDSStructure()
-
+  def get()
+    return MongoMDSConnector.instance.getMds(@name, @workerName, @release)
   end
 
   # установить релиз
-  def setRelease()
-
+  def setRelease(_release)
+    MongoMDSConnector.instance.setRelease(@name, @workerName, @release, _release)
+    MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
   end
 
   # установить воркера
-  def setWorkerName()
+  def setWorkerName(_workerName)
+    MongoMDSConnector.instance.setWorker(@name, @workerName, @release, _workerName)
+    MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+  end
 
+  # установить имя
+  def setName(_name)
+    MongoMDSConnector.instance.setName(@name, @workerName, @release, _name)
+    MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
   end
 
 end
@@ -154,6 +175,10 @@ class Worker
   # tcp connection handler
   @connection = nil
   # something else...
+
+  def initialize(_name)
+    @name = _name
+  end
 
 
   # methods
@@ -198,18 +223,27 @@ class Worker
   end
 
   def setMDS(_mdsStructure, _release)
-    MongoDBConnector.instance.setMds(@name, _mdsStructure, _release)
-    MongoDBConnector.instance.setMDSLastChange(@name, _release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+    # устанавливаем MDS используя класс MDS 
+    mds = MDS.new("", @name, _release)
+    mds.update(_mdsStructure)
+    #MongoDBConnector.instance.setMds(@name, _mdsStructure, _release)
+    #MongoDBConnector.instance.setMDSLastChange(@name, _release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
     #puts "fuck you! its not implemented! Yet"
   end
 
   def getMDS(_release)
-    return MongoDBConnector.instance.getMds(@name, _release)
+    # получаем MDS используя класс MDS
+    mds = MDS.new("", @name, _release)
+    mds.get()
+    #return MongoDBConnector.instance.getMds(@name, _release)
     #puts "Also fuck you!! its also not implemented Yet."
   end
 
   def checkMDSExistance(_release)
-    return MongoDBConnector.instance.checkMDS(@name, _release)
+    # проверим существование MDS на базе через новый класс
+    mds = MDS.new("", @name, _release)
+    return mds.Exists()
+    #return MongoDBConnector.instance.checkMDS(@name, _release)
   end
 
   def setPython(_PythonText)
@@ -249,8 +283,6 @@ class Worker
     MongoDBConnector.instance.setMDSLastChange(@name, _release, _lastChangeDate)
   end
 
-
-  
 end
 
 
@@ -273,7 +305,7 @@ class Server < GServer
         # здесь ждем воркера
         if (message[0] == "WorkerOnline" )
               # сохраняем ссылку на сессию для ввода/вывода
-              workerObj = Worker.new()
+              workerObj = Worker.new(message[1])
               workerObj.setName(message[1])
               workerObj.setConnection(client)
               @@workerIO[message[1]] = workerObj
@@ -636,7 +668,7 @@ end
   end
  
 hostname = '172.20.5.130'
-port = 2000
+port = 2001
 
 serverNew = Server.new(port, hostname, 1000)
 

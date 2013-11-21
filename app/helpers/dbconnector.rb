@@ -67,12 +67,113 @@ class DbConnectionHandler
 	end
 end
 
+
+class MongoMDSConnector
+	include Singleton
+	def initialize
+		begin
+			@client = MongoClient.new('localhost', 27017)
+			@db     = @client['production']
+			@mdsColl= @db['mds']
+		rescue
+			puts "No DB with name 'localhost'@27017 are available"
+		end
+	end
+
+	def createMds(_name , _workerName, _release)
+		if checkMdsForExistance(_name, _workerName, _release)
+			puts "MongoMDSConnector.getMds MDS with params () already exists! name = #{_name}, workerName =  #{_workerName}, release = #{_release}"
+		else
+			@mdsColl.insert({"name" => _name, "workerName" => _workerName, "release" => _release, "runtimeMarker" => "byDefault", "Data" => Hash.new(), "modifTime" => ""})
+		end
+	end
+
+	def getMds(_name, _workerName, _release)
+		if not checkMdsForExistance(_name, _workerName, _release)
+			raise "MongoMDSConnector.getMds No MDS with params {name = #{_name}, workerName =  #{_workerName}, release = #{_release}} are found!"
+		else 
+			puts "MongoMDSConnector.getMds(#{_name}, #{_workerName}, #{_release})"
+			mds = @mdsColl.find("name" => _name, "workerName" => _workerName, "release" => _release).to_a[0]
+			result = mds["Data"]
+		end
+
+	end
+
+	def setMds(_name, _workerName, _release, _hash)
+		if not checkMdsForExistance(_name, _workerName, _release)
+			# нужно установить MDS
+			puts "MongoMDSConnector.setMds No MDS with name = #{_name}, worker name = #{_workerName}, release = #{_release}"
+			puts "creating record..."
+			createMds(_name, _workerName, _release)
+			#raise "No mds with params {name = #{_name}, workerName =  #{_workerName}, release = #{_release}} not found!"
+		end 
+		puts "MongoMDSConnector.setMds(#{_name}, #{_workerName}, #{_release})"
+		@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"Data" => _hash}}, :upsert => true, :safe => true)
+	end
+
+	def checkMdsForExistance(_name, _workerName, _release)
+		# check whether current worker exists
+		if @mdsColl.find("name" => _name, "workerName" => _workerName, "release" => _release).to_a.length() == 0
+			#raise FUUUU!
+			puts "MongoMDSConnector.checkMdsForExistance No MDS with params {name = #{_name}, workerName =  #{_workerName}, release = #{_release}} not found!"
+			result = false
+		else
+			result = true
+		end
+		return result
+	end
+
+	def setName(_name, _workerName, _release, _newName)
+		if checkMdsForExistance(_name, _workerName, _release)
+			@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"name" => _newName}})
+		end
+	end
+
+	def setRelease(_name, _workerName, _release, _newRelease)
+		if checkMdsForExistance(_name, _workerName, _release)
+			@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"release" => _newRelease}})
+		end
+	end
+
+	def setWorker(_name, _workerName, _release, _newWorker)
+		if checkMdsForExistance(_name, _workerName, _release)
+			@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"workerName" => _newWorker}})
+		end
+	end
+
+	def getModificationTime(_name, _workerName, _release)
+		if checkMdsForExistance(_name, _workerName, _release)
+			mds = @mdsColl.find("name" => _name, "workerName" => _workerName, "release" => _release).to_a[0]
+			result = mds["modifTime"]
+		else
+			raise "MongoMDSConnector.getModificationTime [MDS NOT FOUND : {name = #{_name}, workerName =  #{_workerName}, release = #{_release}}]"
+		end
+	end
+
+	def setModificationTime(_name, _workerName, _release, _time)
+		if checkMdsForExistance(_name, _workerName, _release)
+			@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"modifTime" => _time}}, :upsert => true, :safe => true)
+		else
+			raise "MongoMDSConnector.setModificationTime [MDS NOT FOUND : {name = #{_name}, workerName =  #{_workerName}, release = #{_release}}]"
+		end
+	end
+
+	###========================================
+	###  блок для работы с нескольками записями
+	###========================================
+	def getAllNamed()
+		mdsWithName = @mdsColl.find("workerName" => "", "release" => "").to_a
+		return mdsWithName
+	end
+
+end
+
 class MongoDBConnector < DbConnectionHandler
 
 	def initialize
 		begin
 			@client = MongoClient.new('localhost', 27017)
-			@db     = @client['test']
+			@db     = @client['production']
 			@workerColl = @db['workers']
 		rescue
 			puts "No DB with Name 'localhost'@27017 are available"
@@ -276,46 +377,6 @@ class MongoDBConnector < DbConnectionHandler
 
 	end
 
-end
-
-def test()
-	@client = MongoClient.new('localhost', 27017)
-	@db     = @client['test']
-	@coll   = @db['users']
-
-
-	if @coll.find("name" => "worker1").to_a.length() == 0
-		# create new row
-		puts "no worker found, creating worker"
-		@coll.insert({"name" => "worker1", "runtime" => ["startTime" => "2013-10-30", "stopTime" => "2013-12-30"], "python" => "", "stands" => "empty_for_now", "MDS" => "empty_for_now"})
-	else 
-		# update row
-		puts "worker found"
-		@coll.update({"name" => "worker1"}, {"$set" => {"runtime" => ["startTime" => "olool", "stopTime" => "shalala"]}})
-	end
-
-	puts "there are #{@coll.count} records."
-	@coll.find.each { |doc| puts doc.inspect}
-
-	puts "now we want to insert some data"
-	3.times do |i|
-		@coll.insert({"a" => i+1})
-	end
-
-	puts "now there are #{@coll.count} records"
-	@coll.find.each {|doc| puts doc}
-
-	puts "now lets delete all of new data"
-	@coll.remove("a" => 1)
-	@coll.remove("a" => 2)
-	@coll.remove("a" => 3)
-	#@coll.remove("name" => "worker1")
-
-	puts @coll.find("name" => "worker1").to_a[0]["name"]
-
-
-	puts "now there are #{@coll.count} records"
-	@coll.find.each {|doc| puts doc}
 end
 
 

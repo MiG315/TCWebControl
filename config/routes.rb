@@ -77,11 +77,14 @@ RusrailsBlog::Application.routes.draw do
   get "testcontrol/getmds"
   get "testcontrol/getmdsrepo"  
   get "testcontrol/getmdsbackup"
+  get "testcontrol/getmdscollection"
+  get "testcontrol/getmdsbyname"
   
   post "testcontrol/receivetiming"
   post "testcontrol/receivepython"
   post "testcontrol/makepythonbackup"
   post "testcontrol/receivemds"
+  post "testcontrol/savemdswithname"
 
   # test
   get "testjson/testsend"

@@ -15,7 +15,7 @@ class TestcontrolController < ApplicationController
 	value = []	
 	# получить список тачек с сервера
 	workerList = ''
-	TCPSocket.open('172.20.5.130', 2000){ |client|
+	TCPSocket.open('172.20.5.130', 2001){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -36,7 +36,7 @@ class TestcontrolController < ApplicationController
 	worker = params[:compname]
 	standList = ''
 	workerList = ''
-	TCPSocket.open('172.20.5.130', 2000){ |client|
+	TCPSocket.open('172.20.5.130', 2001){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -138,7 +138,7 @@ class TestcontrolController < ApplicationController
 	viewTree = params['data']
 	stand = params[:standname]	
 	# получаем MDS из базы
-	jsonDBTree = MongoDBConnector.instance.getMds(worker, stand)
+	jsonDBTree = MongoMDSConnector.instance.getMds("", worker, stand)
 	# получаем Root Node
 	dbTree = jsonDBTree["Root"]
 	dbTree = dbTree["TestItem"]
@@ -165,8 +165,8 @@ class TestcontrolController < ApplicationController
 	treeNew = Hash.new()
 	treeNew[:Root] = tree
 	
-	MongoDBConnector.instance.setMds(worker, treeNew, stand)
-	MongoDBConnector.instance.setMDSLastChange(worker, stand, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+	MongoMDSConnector.instance.setMds("", worker, stand, treeNew)
+	MongoMDSConnector.instance.setModificationTime("", worker, stand, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
 	render :text => "mds saved"
   end
   
@@ -175,7 +175,7 @@ class TestcontrolController < ApplicationController
 	stand = params[:standname]
 	
 	# получаем MDS из базы
-	jsonNewTree = MongoDBConnector.instance.getMds(worker, stand)
+	jsonNewTree = MongoMDSConnector.instance.getMds("", worker, stand)
 	#puts "tree in db"
 	#puts jsonNewTree
 	# парсим MDS для отображения на странице
@@ -186,6 +186,101 @@ class TestcontrolController < ApplicationController
 	# вводим фиктивную вершину
 	value = Hash.new()
 	value[:data] = "Тестирование " + stand
+		falseAttr = Hash.new()
+		falseAttr[:class] = "jstree-checked"
+		falseAttr[:id] = "0000"
+		falseAttr[:MethodName] = ""
+		falseAttr[:UnitName] = ""
+	value[:attr] = falseAttr
+	# получаем дерево
+	childrens = Array.new()
+	newTree["TestItem"].each do |x|
+		tree = createTreeForView(x)
+		childrens.push(tree)
+	end
+	value[:children] = childrens
+	rawarray = { :data => value}
+	
+	render :text => rawarray.to_json
+  end
+
+  def getmdscollection()
+
+  	namedMDS = MongoMDSConnector.instance.getAllNamed()
+
+	workerList =[]
+
+	namedMDS.each do |x|
+	    workerList.push({:value => x["name"], :label => x["name"]})
+	end
+
+	workerList = {:data => workerList}
+	jsondata = workerList.to_json
+  	render :text => jsondata
+  end
+
+  def savemdswithname()
+	worker = params[:compname]
+	mdsName = params[:mdsname]
+	standName = params[:standname]
+	puts " standNAme = #{standName}"
+	viewTree = params['data']
+
+	# вот тут еще надо подумать, может ввести такое понятие как эталонная MDS для релиза?
+	#!!!!!!!!!!!!!!!!!!!
+	#!!!!!!!!!!!!!!!!!!!
+	jsonDBTree = MongoMDSConnector.instance.getMds("", worker, standName)
+	# получаем Root Node
+	dbTree = jsonDBTree["Root"]
+	dbTree = dbTree["TestItem"]
+	# добавляем фиктивный элемент
+	dbImprovedTree = Hash.new()
+	dbImprovedTree["Name"] = "Тестирование " + mdsName
+	dbImprovedTree["enabled"] = "-1"
+	# подготавливаем дерево
+	childrens = Array.new()
+	dbTree.each do |x|
+		childrens.push(x)
+	end
+	dbImprovedTree["TestItem"] = childrens
+	# теперь устанавливаем в неё значения из пришедшего из вьюхи дерева
+	viewTree = JSON.parse(viewTree)
+	createTreeForDB(dbImprovedTree, viewTree)
+	
+	helpArray = Array.new()
+	dbImprovedTree["TestItem"].each do |x|
+		helpArray.push(x)
+	end
+	tree = Hash.new()
+	tree[:TestItem] =  helpArray
+	treeNew = Hash.new()
+	treeNew[:Root] = tree
+
+	MongoMDSConnector.instance.setMds(mdsName, "", "", treeNew)
+	MongoMDSConnector.instance.setModificationTime(mdsName, "", "", (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+
+	render :text => "all right!"
+  end
+
+  def getmdsbyname()
+	worker = params[:compname]
+	mdsName = params[:standname]
+	# получаем MDS из базы
+	jsonNewTree = MongoMDSConnector.instance.getMds(mdsName, "", "")
+	#jsonNewTree = JSON.parse(jsonNewTree)
+	#puts "data = #{jsonNewTree}"
+	puts "class = #{jsonNewTree.class}"
+
+	#puts "tree in db"
+	#puts jsonNewTree
+	# парсим MDS для отображения на странице
+	# получаем Root Node
+	newTree = jsonNewTree["Root"]
+	#newTree = newTree["TestItem"][0]
+	# новое дерево
+	# вводим фиктивную вершину
+	value = Hash.new()
+	value[:data] = "Тестирование " + mdsName
 		falseAttr = Hash.new()
 		falseAttr[:class] = "jstree-checked"
 		falseAttr[:id] = "0000"

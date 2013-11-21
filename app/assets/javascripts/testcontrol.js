@@ -4,7 +4,7 @@
 	
 	$('#version').empty();
 	$('#version').text('0.0.1 alpha');
-	var sURL = 'http://172.20.5.130:3000/testcontrol/'; //server URL
+	var sURL = 'http://172.20.5.130:3001/testcontrol/'; //server URL
 	if (!window.editor) {
 		window.editor = CodeMirror.fromTextArea(document.getElementById("plainscript"), {
 			mode: "python",
@@ -253,7 +253,7 @@
 			MDSData.data = JSON.stringify(makeEndResult(endResult));
 			console.log('MDS forming success! Data = ' + MDSData.data);
 			$.ajax({
-				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+((receiveMode==='saveMDSWithName')?prompt('Введите новое имя',$('#nameMDS').val()):$('#stand :selected').val()),
+				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+((receiveMode==='saveMDSWithName')?'&mdsname='+prompt('Введите новое имя',$('#nameMDS').val()):''),
 				type:			'POST',
 				data:			MDSData,
 				async:			false,
