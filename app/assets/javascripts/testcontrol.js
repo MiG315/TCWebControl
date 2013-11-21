@@ -17,7 +17,11 @@ $(document).ready(function() {
 		});
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -28,7 +32,11 @@ $(document).ready(function() {
 		tree.check_node(selectedNodes);
 	});
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -79,6 +87,9 @@ $(document).ready(function() {
 
 =======
 	
+<<<<<<< HEAD
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
+=======
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	// close\open nodes by '*' and check\uncheck nodes by space
 	$(document).keyup(function(event) {
@@ -214,7 +225,11 @@ $(document).ready(function() {
 		});
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -241,7 +256,11 @@ $(document).ready(function() {
 		});
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -318,7 +337,11 @@ $(document).ready(function() {
 		}
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -344,7 +367,11 @@ $(document).ready(function() {
 		}
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -369,7 +396,11 @@ $(document).ready(function() {
 		});
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 =======
 	
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
@@ -441,6 +472,7 @@ $(document).ready(function() {
 
 	// getting start stand timing when tab clicked
 	$('#starttimehref').click(function (){timingGetter()});
+<<<<<<< HEAD
 
 	// getting test coverage results
 	$('#coveragehref').click(function (){coverageGetter()});
@@ -479,9 +511,33 @@ $(document).ready(function() {
 	// try to save current MDS on server with different name
 	$('#deleteMDSByName').click(function (){deleteMDSByName()});
 	// try to backup current MDS on server
+=======
+
+	// getting test coverage results
+	$('#coveragehref').click(function (){coverageGetter()});
+	$('#release').change(function (){coverageGetter()});
+	/* ===Getting functions=== */
+
+	/* ===Saving and backups=== */
+	// try to save current Python script on server
+	$('#savePython').click(function (){pythonSetter('save')});
+	// try to backup current Python script on server
+	$('#makePythonBackup').click(function (){pythonSetter('backup')});
+
+	// try to save current MDS on server
+	$('#saveMDS').click(function (){MDSSetter('save')});
+	// try to save current MDS on server with different name
+	$('#saveMDSWithName').click(function (){MDSSetter('saveMDSWithName')});
+	// try to save current MDS on server with different name
+	$('#deleteMDSByName').click(function (){deleteMDSByName()});
+	// try to backup current MDS on server
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	$('#makeMDSBackup').click(function (){MDSSetter('backup')});
 	// try to save current timing on server
 	$('#savetiming').click(function (){timingSetter()});
 	/* ===Saving and backups=== */	
 });
+<<<<<<< HEAD
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
+=======
 >>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
