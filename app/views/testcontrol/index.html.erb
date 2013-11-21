@@ -36,6 +36,7 @@
 					<li><a href="#testplan" id="testplanhref">Редактирование тестового плана</a></li>
 					<li><a href="#pythonscript" id="pythonscripthref">Редактирование Python скрипта</a></li>
 					<li><a href="#starttime" id="starttimehref">Редактирование времени запуска</a></li>
+					<li><a href="#coverage" id="coveragehref">Покрытие тестовых планов</a></li>
 				</ul>
 				<div id="testplan">
 					  <div class="savePanel">
@@ -75,6 +76,15 @@
 						</tr>
 					</table>
 					<input type="button" value="Сохранить" id="savetiming" />
+				</div>
+				<div id="coverage">
+					<span class="picker">Выберите релиз</span>
+					<select id="release" class="picker">
+						<option value="release2_3">release2_3</option>
+						<option value="release2_4">release2_4</option>
+					</select>
+					<table id="cTable">
+					</table>
 				</div>
 			</div>
 		</div>
