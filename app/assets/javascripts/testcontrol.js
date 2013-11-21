@@ -51,9 +51,28 @@
 				$('#comp').append('<option value="' +
 				obj.value + '">' + obj.label + '</option>');
 			});
+		standGetter();
 		});
 	})();
-
+	
+	function standGetter(){
+		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
+			console.log("Building stand list");
+			console.log(json)
+			$('#stand').empty();
+			// Filling table from JSON
+			$.each(json.data, function(key,obj) {
+				$('#stand').append('<option value="' +
+				obj.value + '">' + obj.label + '</option>');
+			});
+			switch ("false") {
+				case $('#testplan').attr('aria-hidden'): {MDSGetter('usual'); loadMDSCollection();}; break;
+				case $('#pythonscript').attr('aria-hidden'): pythonGetter('usual'); break;
+				case $('#starttime').attr('aria-hidden'): timingGetter(); break;
+			}
+		});
+	}
+	
 	function loadMDSCollection() {
 		$('#nameMDS').empty();
 		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
@@ -341,29 +360,6 @@
 		});
 	};
 
-	// filling stand names of selected computer
-	$('#comp').change(function(){
-		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
-			console.log("Building stand list");
-			console.log(json)
-			$('#stand').empty();
-			// Filling table from JSON
-			$.each(json.data, function(key,obj) {
-				$('#stand').append('<option value="' +
-				obj.value + '">' + obj.label + '</option>');
-			});
-			switch ("false") {
-				case $('#testplan').attr('aria-hidden'): {MDSGetter('usual'); loadMDSCollection();}; break;
-				case $('#pythonscript').attr('aria-hidden'): pythonGetter('usual'); break;
-				case $('#starttime').attr('aria-hidden'): timingGetter(); break;
-			}
-		});
-	});
-
-	$('#stand').change(function(){
-		if (!!$('#testplan').attr('aria-hidden')) {MDSGetter('usual');}
-	});
-
 	/* ===Getting functions=== */
 	// getting plain Python settings text
 	$('#pythonscripthref').click(function (){ pythonGetter('usual'); });
@@ -373,13 +369,19 @@
 	$('#getPythonFromBackup').click(function (){ pythonGetter('backup'); });
 
 	// getting MDS 
+	// filling stand names of selected computer
+	$('#comp').change(standGetter());
+	// get MDS list and test plan
+	$('#stand').change(function(){
+		if (!!$('#testplan').attr('aria-hidden')) { MDSGetter('usual'); loadMDSCollection(); }
+	});
 	$('#testplanhref').click(function (){ MDSGetter('usual'); });
 	// getting MDS from repo
 	$('#getMDSFromRepo').click(function (){ MDSGetter('repo'); });
 	// getting MDS from backup
 	$('#getMDSFromBackup').click(function (){ MDSGetter('backup'); });
 	// getting MDS by name
-	$('#nameMDS').change(function (){ MDSGetter('getMDSByName'); loadMDSCollection(); });
+	$('#nameMDS').change(function (){ MDSGetter('getMDSByName'); });
 
 	// getting start stand timing when tab clicked
 	$('#starttimehref').click(function (){ timingGetter(); });
