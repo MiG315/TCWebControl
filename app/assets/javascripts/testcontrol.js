@@ -1,4 +1,4 @@
-﻿$(document).ready(function() {
+$(document).ready(function() {
 	$("body").height("100%");
 	$("body").width("100%");
 	
@@ -66,6 +66,7 @@
 		});
 	}
 	
+	// close\open nodes by '*' and check\uncheck nodes by space
 	$(document).keyup(function(event) {
 		var tree = $.jstree._reference('#testsTree')
 		var selectedNodes = tree.get_selected();
@@ -271,7 +272,28 @@
 			});
 		}
 	}
-
+	
+	function deleteMDSByName() {
+		var sURLset = sURL+'deleteMDSByName?compname=';
+		$.ajax({
+			url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
+			type:			'POST',
+			data:			MDSData,
+			async:			false,
+			success:		function() {
+				console.log('MDS deleting success!');
+			},
+			statusCode: {
+				404: function() {
+					alert("Не найдено");
+				},
+				500: function() {
+					alert("500 service temporarily disabled! Ваше дерево устарело. Обновитесь!");
+				}
+			}
+		});
+	};
+	
 	// filling stand names of selected computer
 	$('#comp').change(function(){
 		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
@@ -297,37 +319,39 @@
 	
 	/* Getting functions */
 	// getting plain Python settings text
-	$('#pythonscripthref').click(function(){pythonGetter('usual')});
+	$('#pythonscripthref').click(pythonGetter('usual'));
 	// getting plain Python settings text from repo
-	$('#getPythonFromRepo').click(function(){pythonGetter('repo')});
+	$('#getPythonFromRepo').click(pythonGetter('repo'));
 	// getting plain Python settings text from backup
-	$('#getPythonFromBackup').click(function(){pythonGetter('backup')});
+	$('#getPythonFromBackup').click(pythonGetter('backup'));
 
 	// getting MDS 
-	$('#testplanhref').click(function(){MDSGetter('usual')});
+	$('#testplanhref').click(MDSGetter('usual'));
 	// getting MDS from repo
-	$('#getMDSFromRepo').click(function(){MDSGetter('repo')});
+	$('#getMDSFromRepo').click(MDSGetter('repo'));
 	// getting MDS from backup
-	$('#getMDSFromBackup').click(function(){MDSGetter('backup')});
+	$('#getMDSFromBackup').click(MDSGetter('backup'));
 	// getting MDS by name
-	$('#nameMDS').change(function(){MDSGetter('getMDSByName');});
+	$('#nameMDS').change(MDSGetter('getMDSByName'));
 
 	// getting start stand timing when tab clicked
-	$('#starttimehref').click(function(){timingGetter()});
+	$('#starttimehref').click(timingGetter());
 	/* Getting functions */
 
 	/* Saving and backups */
 	// try to save current Python script on server
-	$('#savePython').click(function(){pythonSetter('save');});
+	$('#savePython').click(pythonSetter('save'));
 	// try to backup current Python script on server
-	$('#makePythonBackup').click(function(){pythonSetter('backup');});
+	$('#makePythonBackup').click(pythonSetter('backup'));
 
 	// try to save current MDS on server
-	$('#saveMDS').click(function(){MDSSetter('save');});
+	$('#saveMDS').click(MDSSetter('save'));
 	// try to save current MDS on server with different name
-	$('#saveMDSWithName').click(function(){MDSSetter('saveMDSWithName');});
+	$('#saveMDSWithName').click(MDSSetter('saveMDSWithName'));
+	// try to save current MDS on server with different name
+	$('#deleteMDSByName').click(deleteMDSByName());
 	// try to backup current MDS on server
-	$('#makeMDSBackup').click(function(){MDSSetter('backup');});
+	$('#makeMDSBackup').click(MDSSetter('backup'));
 	/* Saving and backups */
 
 	// try to save current timing on server
