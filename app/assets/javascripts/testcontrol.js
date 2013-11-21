@@ -1,4 +1,4 @@
-﻿$(document).ready(function() {
+$(document).ready(function() {
 	$("body").height("100%");
 	$("body").width("100%");
 
@@ -16,14 +16,22 @@
 			tabMode: "shift"
 		});
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	// check selected items
 	$('#v').click(function() {
 		var tree = $.jstree._reference('#testsTree');
 		var selectedNodes = tree.get_selected();
 		tree.check_node(selectedNodes);
 	});
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	// uncheck selected items
 	$('#x').click(function() {
 		var tree = $.jstree._reference('#testsTree');
@@ -67,7 +75,11 @@
 			});
 		});
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	// close\open nodes by '*' and check\uncheck nodes by space
 	$(document).keyup(function(event) {
 		var tree = $.jstree._reference('#testsTree')
@@ -201,7 +213,11 @@
 			}
 		});
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	function coverageGetter() {
 		$('#loaderScr').fadeOut('fast');
 		var sURLget = sURL+'getCoverage?compname=';
@@ -224,7 +240,11 @@
 			$('#loaderScr').fadeIn('fast');
 		});
 	};
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	function pythonSetter(receiveMode) {
 		var sURLset;
 		switch (receiveMode) {
@@ -297,7 +317,11 @@
 			});
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	function timingSetter(){
 		if (confirm('Вы уверены?')) {
 			var timingArr = {name:[]};
@@ -319,7 +343,11 @@
 			timingGetter();
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	function deleteMDSByName() {
 		var sURLset = sURL+'deleteMDSByName?compname=';
 		$.ajax({
@@ -340,7 +368,11 @@
 			}
 		});
 	};
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	// filling stand names of selected computer
 	$('#comp').change(function(){
 		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
@@ -363,6 +395,7 @@
 	$('#stand').change(function(){
 		if (!!$('#testplan').attr('aria-hidden')) {MDSGetter('usual');}
 	});
+<<<<<<< HEAD
 
 	/* ===Getting functions=== */
 	// getting plain Python settings text
@@ -387,10 +420,37 @@
 	// getting test coverage results
 	$('#coveragehref').click(function (){ coverageGetter(); });
 	$('#release').change(function (){ coverageGetter(); });
+=======
+	
+	/* ===Getting functions=== */
+	// getting plain Python settings text
+	$('#pythonscripthref').click(function (){pythonGetter('usual')});
+	// getting plain Python settings text from repo
+	$('#getPythonFromRepo').click(function (){pythonGetter('repo')});
+	// getting plain Python settings text from backup
+	$('#getPythonFromBackup').click(function (){pythonGetter('backup')});
+
+	// getting MDS 
+	$('#testplanhref').click(function (){MDSGetter('usual')});
+	// getting MDS from repo
+	$('#getMDSFromRepo').click(function (){MDSGetter('repo')});
+	// getting MDS from backup
+	$('#getMDSFromBackup').click(function (){MDSGetter('backup')});
+	// getting MDS by name
+	$('#nameMDS').change(function (){MDSGetter('getMDSByName')});
+
+	// getting start stand timing when tab clicked
+	$('#starttimehref').click(function (){timingGetter()});
+
+	// getting test coverage results
+	$('#coveragehref').click(function (){coverageGetter()});
+	$('#release').change(function (){coverageGetter()});
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
 	/* ===Getting functions=== */
 
 	/* ===Saving and backups=== */
 	// try to save current Python script on server
+<<<<<<< HEAD
 	$('#savePython').click(function (){ pythonSetter('save'); });
 	// try to backup current Python script on server
 	$('#makePythonBackup').click(function (){ pythonSetter('backup'); });
@@ -407,3 +467,21 @@
 	$('#savetiming').click(function (){ timingSetter(); });
 	/* ===Saving and backups=== */	
 });
+=======
+	$('#savePython').click(function (){pythonSetter('save')});
+	// try to backup current Python script on server
+	$('#makePythonBackup').click(function (){pythonSetter('backup')});
+
+	// try to save current MDS on server
+	$('#saveMDS').click(function (){MDSSetter('save')});
+	// try to save current MDS on server with different name
+	$('#saveMDSWithName').click(function (){MDSSetter('saveMDSWithName')});
+	// try to save current MDS on server with different name
+	$('#deleteMDSByName').click(function (){deleteMDSByName()});
+	// try to backup current MDS on server
+	$('#makeMDSBackup').click(function (){MDSSetter('backup')});
+	// try to save current timing on server
+	$('#savetiming').click(function (){timingSetter()});
+	/* ===Saving and backups=== */	
+});
+>>>>>>> 933855b8dcc01442b3bdec36586a891662999f69
