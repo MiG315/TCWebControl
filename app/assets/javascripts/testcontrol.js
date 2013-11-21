@@ -1,7 +1,7 @@
 ﻿$(document).ready(function() {
 	$("body").height("100%");
 	$("body").width("100%");
-	
+
 	$('#version').empty();
 	$('#version').text('0.0.1 alpha');
 	var sURL = 'http://172.20.5.130:3001/testcontrol/'; //server URL
@@ -16,26 +16,28 @@
 			tabMode: "shift"
 		});
 	}
+
 	// check selected items
 	$('#v').click(function() {
 		var tree = $.jstree._reference('#testsTree');
 		var selectedNodes = tree.get_selected();
 		tree.check_node(selectedNodes);
 	});
+
 	// uncheck selected items
 	$('#x').click(function() {
 		var tree = $.jstree._reference('#testsTree');
 		var selectedNodes = tree.get_selected();
 		tree.uncheck_node(selectedNodes);
 	});
-	
+
 	// tabs init
 	(function() {
 		$("#tabs").tabs();
 		$("#plainscript").height("100%");
 		$("#plainscript").width("100%");
 	})();
-	
+
 	// filling computer names
 	(function() {
 		$('#comp').empty();
@@ -51,10 +53,10 @@
 			});
 		});
 	})();
-	
+
 	function loadMDSCollection() {
 		$('#nameMDS').empty();
-		$.getJSON(sURL+'getmdscollection/', function(json) {
+		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
 			console.log("Building MDS list");
 			console.log(json)
 			$('#nameMDS').empty();
@@ -65,7 +67,7 @@
 			});
 		});
 	}
-	
+
 	// close\open nodes by '*' and check\uncheck nodes by space
 	$(document).keyup(function(event) {
 		var tree = $.jstree._reference('#testsTree')
@@ -89,7 +91,7 @@
 			}
 		}
 	});
-	
+
 	function timingGetter() {
 		$('#loaderScr').fadeOut('fast');
 		// Parsing answer for table data query
@@ -110,7 +112,7 @@
 			$('#loaderScr').fadeIn('fast');
 		});
 	}
-	
+
 	function pythonGetter(receiveMode) {
 		$('#loaderScr').fadeOut('fast');
 		var sURLget;
@@ -200,6 +202,29 @@
 		});
 	}
 
+	function coverageGetter() {
+		$('#loaderScr').fadeOut('fast');
+		var sURLget = sURL+'getCoverage?compname=';
+		$.ajax({
+			url: sURLget.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#release :selected').val()
+		}).done(function(data){
+			console.log("Building cTable");
+			$('#cTable').empty();
+			$('#cTable').append(	'<td><b>Название</b></td>'+
+									'<td><b>Старое время</b></td>'+
+									'<td><b>Новое время</b></td>');
+			// Filling table from JSON
+			$.each(json.dataArray, function(i, obj) {
+				$('#cTable').append('<tr>' +
+				'<td>' + obj['label'] + '</td>' +
+				'<td>' + obj['oldtime'] + '</td>' +
+				'<td>' + '<input type="time" class="time" name="' + obj['label'] + '" value="'+obj['oldtime']+'" /></td>' + '</tr>');
+			});
+			$('#loaderScr').text('Coverage results for '+$('#comp :selected').val()+' is loaded');
+			$('#loaderScr').fadeIn('fast');
+		});
+	};
+
 	function pythonSetter(receiveMode) {
 		var sURLset;
 		switch (receiveMode) {
@@ -209,19 +234,19 @@
 		if (confirm('Вы уверены?')) {
 			var pythonSc = {script:""};
 			pythonSc.script = editor.getValue();
-			console.log('Python forming success! Data = ' + pythonSc);
+			console.log('Python forming success! Data = '/* + pythonSc*/);
 			$.ajax({
 				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val(),
 				type:			'POST',
 				data:			pythonSc,
 				async:			false,
 				success:		function() {
-					console.log('Python sending success!' + pythonSc);
+					console.log('Python sending success!'/* + pythonSc*/);
 				}
 			});
 		}
 	}
-	
+
 	function MDSSetter(receiveMode) {
 		var sURLset, tree;
 		var makeEndResult = function (data) {
@@ -252,7 +277,7 @@
 			tree = $.jstree._reference('#testsTree');
 			var endResult = tree.get_json(-1,['data','attr','id','class','metadata','children'])[0];
 			MDSData.data = JSON.stringify(makeEndResult(endResult));
-			console.log('MDS forming success! Data = ' + MDSData.data);
+			console.log('MDS forming success! Data = '/* + MDSData.data*/);
 			$.ajax({
 				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+((receiveMode==='saveMDSWithName')?'&mdsname='+prompt('Введите новое имя',$('#nameMDS').val()):''),
 				type:			'POST',
@@ -272,7 +297,29 @@
 			});
 		}
 	}
-	
+
+	function timingSetter(){
+		if (confirm('Вы уверены?')) {
+			var timingArr = {name:[]};
+			$('.time').each(function(){
+				var a = {name : $(this).prop('name'), value : $(this).prop('value')}
+				timingArr["name"].push(a);
+			});
+			console.log('timing forming success!'+timingArr);
+			$.ajax({
+				url:			sURL.toLowerCase()+'receivetiming?compname='+$('#comp :selected').val(),
+				type:			'POST',
+				data:			timingArr,
+				dataType:		'json',
+				async:			false,
+				success:		function() {
+					console.log('timing sending success!'+timingArr);
+				}
+			});
+			timingGetter();
+		}
+	}
+
 	function deleteMDSByName() {
 		var sURLset = sURL+'deleteMDSByName?compname=';
 		$.ajax({
@@ -293,7 +340,7 @@
 			}
 		});
 	};
-	
+
 	// filling stand names of selected computer
 	$('#comp').change(function(){
 		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
@@ -312,68 +359,51 @@
 			}
 		});
 	});
-	
+
 	$('#stand').change(function(){
-		if (!!$('#testplan').attr('aria-hidden')) {MDSGetter('usual')}
+		if (!!$('#testplan').attr('aria-hidden')) {MDSGetter('usual');}
 	});
-	
-	/* Getting functions */
+
+	/* ===Getting functions=== */
 	// getting plain Python settings text
-	$('#pythonscripthref').click(pythonGetter('usual'));
+	$('#pythonscripthref').click(function (){ pythonGetter('usual'); });
 	// getting plain Python settings text from repo
-	$('#getPythonFromRepo').click(pythonGetter('repo'));
+	$('#getPythonFromRepo').click(function (){ pythonGetter('repo'); });
 	// getting plain Python settings text from backup
-	$('#getPythonFromBackup').click(pythonGetter('backup'));
+	$('#getPythonFromBackup').click(function (){ pythonGetter('backup'); });
 
 	// getting MDS 
-	$('#testplanhref').click(MDSGetter('usual'));
+	$('#testplanhref').click(function (){ MDSGetter('usual'); });
 	// getting MDS from repo
-	$('#getMDSFromRepo').click(MDSGetter('repo'));
+	$('#getMDSFromRepo').click(function (){ MDSGetter('repo'); });
 	// getting MDS from backup
-	$('#getMDSFromBackup').click(MDSGetter('backup'));
+	$('#getMDSFromBackup').click(function (){ MDSGetter('backup'); });
 	// getting MDS by name
-	$('#nameMDS').change(MDSGetter('getMDSByName'));
+	$('#nameMDS').change(function (){ MDSGetter('getMDSByName'); loadMDSCollection(); });
 
 	// getting start stand timing when tab clicked
-	$('#starttimehref').click(timingGetter());
-	/* Getting functions */
+	$('#starttimehref').click(function (){ timingGetter(); });
 
-	/* Saving and backups */
+	// getting test coverage results
+	$('#coveragehref').click(function (){ coverageGetter(); });
+	$('#release').change(function (){ coverageGetter(); });
+	/* ===Getting functions=== */
+
+	/* ===Saving and backups=== */
 	// try to save current Python script on server
-	$('#savePython').click(pythonSetter('save'));
+	$('#savePython').click(function (){ pythonSetter('save'); });
 	// try to backup current Python script on server
-	$('#makePythonBackup').click(pythonSetter('backup'));
+	$('#makePythonBackup').click(function (){ pythonSetter('backup'); });
 
 	// try to save current MDS on server
-	$('#saveMDS').click(MDSSetter('save'));
+	$('#saveMDS').click(function (){ MDSSetter('save'); });
 	// try to save current MDS on server with different name
-	$('#saveMDSWithName').click(MDSSetter('saveMDSWithName'));
+	$('#saveMDSWithName').click(function (){ MDSSetter('saveMDSWithName'); });
 	// try to save current MDS on server with different name
-	$('#deleteMDSByName').click(deleteMDSByName());
+	$('#deleteMDSByName').click(function (){ deleteMDSByName(); });
 	// try to backup current MDS on server
-	$('#makeMDSBackup').click(MDSSetter('backup'));
-	/* Saving and backups */
-
+	$('#makeMDSBackup').click(function (){ MDSSetter('backup'); });
 	// try to save current timing on server
-	$('#savetiming').click(function(){
-		if (confirm('Вы уверены?')) {
-			var timingArr = {name:[]};
-			$('.time').each(function(){
-				var a = {name : $(this).prop('name'), value : $(this).prop('value')}
-				timingArr["name"].push(a);
-			});
-			console.log('timing forming success!'+timingArr);
-			$.ajax({
-				url:			sURL.toLowerCase()+'receivetiming?compname='+$('#comp :selected').val(),
-				type:			'POST',
-				data:			timingArr,
-				dataType:		'json',
-				async:			false,
-				success:		function() {
-					console.log('timing sending success!'+timingArr);
-				}
-			});
-			timingGetter();
-		}
-	});
+	$('#savetiming').click(function (){ timingSetter(); });
+	/* ===Saving and backups=== */	
 });
