@@ -188,7 +188,7 @@
 			case 'backup':			sURLget = sURL+'getMDSBackup?compname='; break;
 			case 'getMDSByName':	sURLget = sURL+'getMDSByName?compname='; break;
 		}
-		$.getJSON(sURLget.toLowerCase() +$('#comp :selected').val()+'&standname='+((receiveMode==='getMDSByName')?$('#nameMDS').val():$('#stand :selected').val()), function(json) {
+		$.getJSON(sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname='+$('#nameMDS').val():'')), function(json) {
 			loadedData = json.data;
 			$("#testsTree")
 				.jstree({
