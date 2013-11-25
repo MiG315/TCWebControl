@@ -56,7 +56,7 @@
 	})();
 	
 	function standGetter(){
-		$.getJSON(sURL+'getstand/?compname='+$('#comp :selected').val(), function(json) {
+		$.getJSON(sURL+'getstand/?compname=' + $('#comp :selected').val(), function(json) {
 			console.log("Building stand list");
 			console.log(json)
 			$('#stand').empty();
@@ -70,7 +70,7 @@
 				obj.value + '">' + obj.label + '</option>');
 			});
 			switch ("false") {
-				case $('#testplan').attr('aria-hidden'): {MDSGetter('usual'); loadMDSCollection();}; break;
+				case $('#testplan').attr('aria-hidden'): { MDSGetter('usual'); loadMDSCollection(); }; break;
 				case $('#pythonscript').attr('aria-hidden'): pythonGetter('usual'); break;
 				case $('#starttime').attr('aria-hidden'): timingGetter(); break;
 				case $('#coverage').attr('aria-hidden'): coverageGetter(); break;
@@ -189,7 +189,7 @@
 			case 'backup':			sURLget = sURL+'getMDSBackup?compname='; break;
 			case 'getMDSByName':	sURLget = sURL+'getMDSByName?compname='; break;
 		}
-		$.getJSON(sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname='+$('#nameMDS').val():''), function(json) {
+		$.getJSON(sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():''), function(json) {
 			loadedData = json.data;
 			$("#testsTree")
 				.jstree({
@@ -215,7 +215,7 @@
 			console.log(json.data);
 			$('#loaderScr').text('MDS ' + $('#stand :selected').val() + ' from '+$('#comp :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
-		}).error(function(jqXHR, textStatus, errorThrown) {
+		}).error(function (jqXHR, textStatus, errorThrown) {
 			console.log("error " + textStatus);
 			console.log(jqXHR);
 			if (errorThrown === 'Internal Server Error')
@@ -234,17 +234,14 @@
 		}).done(function(data){
 			console.log("Building covertable");
 			$('#covertable').empty();
-			$('#covertable').append('<tr>\n');
 			// Filling table from JSON
-			// filling header
-			$.each(json.dataArray, function(i, obj) {
-			$('#covertable').append('<tr>\n');
+			$.each(data.dataArray, function(i, obj) {
+				$('#covertable').append('<tr>\n');
 				$.each(obj[i], function(j, item) {
 					$('#covertable').append('<td><b>'+ item[j] +'</b></td>\n');
 				});
 				$('#covertable').append('<\tr>\n');
 			});
-			$('#covertable').append('<\tr>\n');
 			$('#loaderScr').text('Coverage results for '+$('#comp :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
 		});
@@ -350,7 +347,7 @@
 		$.ajax({
 			url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
 			type:			'POST',
-			data:			null,
+			data:			'',
 			async:			false,
 			success:		function() {
 				console.log('MDS deleting success!');
