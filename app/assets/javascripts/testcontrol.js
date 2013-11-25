@@ -60,15 +60,19 @@
 			console.log("Building stand list");
 			console.log(json)
 			$('#stand').empty();
+			$('#releasecoverage').empty();
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#stand').append('<option value="' +
+				obj.value + '">' + obj.label + '</option>');
+				$('#releasecoverage').append('<option value="' +
 				obj.value + '">' + obj.label + '</option>');
 			});
 			switch ("false") {
 				case $('#testplan').attr('aria-hidden'): {MDSGetter('usual'); loadMDSCollection();}; break;
 				case $('#pythonscript').attr('aria-hidden'): pythonGetter('usual'); break;
 				case $('#starttime').attr('aria-hidden'): timingGetter(); break;
+				case $('#coverage').attr('aria-hidden'): coverageGetter(); break;
 			}
 		});
 	}
@@ -225,20 +229,29 @@
 		$('#loaderScr').fadeOut('fast');
 		var sURLget = sURL+'getCoverage?compname=';
 		$.ajax({
-			url: sURLget.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#release :selected').val()
+			url: sURLget.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#releasecoverage :selected').val()
 		}).done(function(data){
-			console.log("Building cTable");
-			$('#cTable').empty();
-			$('#cTable').append(	'<td><b>Название</b></td>'+
-									'<td><b>Старое время</b></td>'+
-									'<td><b>Новое время</b></td>');
+			console.log("Building covertable");
+			$('#covertable').empty();
+			$('#covertable').append('<tr>\n');
 			// Filling table from JSON
+			// filling header
 			$.each(json.dataArray, function(i, obj) {
-				$('#cTable').append('<tr>' +
-				'<td>' + obj['label'] + '</td>' +
-				'<td>' + obj['oldtime'] + '</td>' +
-				'<td>' + '<input type="time" class="time" name="' + obj['label'] + '" value="'+obj['oldtime']+'" /></td>' + '</tr>');
+				$('#covertable').append('<td><b>Приоритет '+ i +'</b></td>\n');}
+			);
+			$('#covertable').append('<\tr>\n');
+			// filling total amount of tests
+			$('#covertable').append('<tr>\n');
+			$.each(json.dataArray, function(i, obj) {
+				$('#covertable').append('<td>' + obj['total'] + '</td>\n');
 			});
+			$('#covertable').append('<\tr>\n');
+			// filling missing tests
+			$('#covertable').append('<tr>\n');
+			$.each(json.dataArray, function(i, obj) {
+				$('#covertable').append('<td>' + obj['missing'] + '</td>\n');
+			});
+			$('#covertable').append('<\tr>\n');
 			$('#loaderScr').text('Coverage results for '+$('#comp :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
 		});
@@ -388,7 +401,7 @@
 
 	// getting test coverage results
 	$('#coveragehref').click(function (){ coverageGetter(); });
-	$('#release').change(function (){ coverageGetter(); });
+	$('#releasecoverage').change(function (){ coverageGetter(); });
 	/* ===Getting functions=== */
 
 	/* ===Saving and backups=== */
