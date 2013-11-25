@@ -237,19 +237,11 @@
 			// Filling table from JSON
 			// filling header
 			$.each(json.dataArray, function(i, obj) {
-				$('#covertable').append('<td><b>Приоритет '+ i +'</b></td>\n');}
-			);
-			$('#covertable').append('<\tr>\n');
-			// filling total amount of tests
 			$('#covertable').append('<tr>\n');
-			$.each(json.dataArray, function(i, obj) {
-				$('#covertable').append('<td>' + obj['total'] + '</td>\n');
-			});
-			$('#covertable').append('<\tr>\n');
-			// filling missing tests
-			$('#covertable').append('<tr>\n');
-			$.each(json.dataArray, function(i, obj) {
-				$('#covertable').append('<td>' + obj['missing'] + '</td>\n');
+				$.each(obj[i], function(j, item) {
+					$('#covertable').append('<td><b>'+ item[j] +'</b></td>\n');
+				});
+				$('#covertable').append('<\tr>\n');
 			});
 			$('#covertable').append('<\tr>\n');
 			$('#loaderScr').text('Coverage results for '+$('#comp :selected').val()+' is loaded');
@@ -357,7 +349,7 @@
 		$.ajax({
 			url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
 			type:			'POST',
-			data:			MDSData,
+			data:			null,
 			async:			false,
 			success:		function() {
 				console.log('MDS deleting success!');
