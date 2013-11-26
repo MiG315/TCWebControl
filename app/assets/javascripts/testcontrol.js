@@ -355,6 +355,7 @@
 				async:			false,
 				success:		function() {
 					console.log('MDS deleting success!');
+					loadMDSCollection();
 				},
 				statusCode: {
 					404: function() {
