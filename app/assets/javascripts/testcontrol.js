@@ -77,7 +77,7 @@
 			}
 		});
 	}
-	
+
 	function loadMDSCollection() {
 		$('#nameMDS').empty();
 		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
@@ -249,6 +249,7 @@
 
 	function pythonSetter(receiveMode) {
 		var sURLset;
+		$('#loaderScr').fadeOut('fast');
 		switch (receiveMode) {
 			case 'save':	sURLset = sURL+'receivePython?compname='; break;
 			case 'backup':	sURLset = sURL+'makePythonBackup?compname='; break;
@@ -264,6 +265,8 @@
 				async:			false,
 				success:		function() {
 					console.log('Python sending success!'/* + pythonSc*/);
+					$('#loaderScr').text('Python script for '+$('#comp :selected').val()+' is saved!');
+					$('#loaderScr').fadeIn('fast');
 				}
 			});
 		}
@@ -344,23 +347,25 @@
 
 	function deleteMDSByName() {
 		var sURLset = sURL+'deleteMDSByName?compname=';
-		$.ajax({
-			url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
-			type:			'POST',
-			data:			'',
-			async:			false,
-			success:		function() {
-				console.log('MDS deleting success!');
-			},
-			statusCode: {
-				404: function() {
-					alert("Не найдено");
+		if (confirm('Вы уверены?')) {
+			$.ajax({
+				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
+				type:			'POST',
+				data:			'',
+				async:			false,
+				success:		function() {
+					console.log('MDS deleting success!');
 				},
-				500: function() {
-					alert("500 service temporarily disabled! Ваше дерево устарело. Обновитесь!");
+				statusCode: {
+					404: function() {
+						alert("Не найдено");
+					},
+					500: function() {
+						alert("500 service temporarily disabled! Ваше дерево устарело. Обновитесь!");
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 
 	/* ===Getting functions=== */
