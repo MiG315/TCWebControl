@@ -149,8 +149,8 @@
 		$.getJSON(sURL+'gettestcoverage/?release='+$('#releasecoverage :selected').val(), function(json) {
 			console.log("Building coverage table");
 			$('#covertable').empty();
-			$('#covertable').append('<tr><td><b>Приоритет</b></td>'+
-									'<td><b>Список тестов</b></td></tr>\n');
+			$('#covertable').append('<tr><td class="test_priority"><b>Приоритет</b></td>'+
+									'<td class="uncovered_test"><b>Список тестов</b></td></tr>\n');
 			// Filling table from JSON
 			$.each(json.dataArray, function(i, obj) {
 				$('#covertable').append('<tr>' +
