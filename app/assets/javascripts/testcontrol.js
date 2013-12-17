@@ -134,15 +134,17 @@
 		});
 	}
 
+	function makeStringFromArray(aArr) {
+		var str = '';
+		aArr.forEach(function(val){
+			str += '<div class="uncovered_test">'+val+'</div>\n';
+		});
+		return str;
+	}
+	
 	function testCoverageGetter() {
 		$('#loaderScr').fadeOut('fast');
-		this.makeStringFromArray = function(aArr) {
-			var str = '';
-			aArr.forEach(function(val){
-				str += '<div class="uncovered_test">'+val+'</div>\n';
-			});
-			return str;
-		};
+		
 		// Parsing answer for table data query
 		$.getJSON(sURL+'gettestcoverage/?release='+$('#releasecoverage :selected').val(), function(json) {
 			console.log("Building coverage table");
@@ -153,7 +155,7 @@
 			$.each(json.dataArray, function(i, obj) {
 				$('#covertable').append('<tr>' +
 				'<td class="test_priority">' + obj['name'] + '</td>' +
-				'<td>' + this.makeStringFromArray(obj['value']) + '</td></tr>\n');
+				'<td>' + makeStringFromArray(obj['value']) + '</td></tr>\n');
 			});
 			$('#loaderScr').text('Test coverage from '+$('#releasecoverage :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
@@ -235,7 +237,7 @@
 				}).bind('loaded.jstree', function() {
 					prepareNodes(loadedData);
 				});
-			console.log(json.data);
+			//console.log(json.data);
 			$('#loaderScr').text('MDS ' + $('#stand :selected').val() + ' from '+$('#comp :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
 		}).error(function (jqXHR, textStatus, errorThrown) {
