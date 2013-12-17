@@ -150,7 +150,7 @@
 			console.log("Building coverage table");
 			$('#covertable').empty();
 			$('#covertable').append('<tr><td class="test_priority"><b>Приоритет</b></td>'+
-									'<td class="uncovered_test"><b>Список тестов</b></td></tr>\n');
+									'<td class="uncovered_test"><b>Список выключенных из тестового плана тестов</b></td></tr>\n');
 			// Filling table from JSON
 			$.each(json.dataArray, function(i, obj) {
 				$('#covertable').append('<tr>' +
