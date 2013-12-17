@@ -44,7 +44,6 @@
 		$('#stand').empty();
 		$.getJSON(sURL+'getcomp/', function(json) {
 			console.log("Building comp list");
-			console.log(json)
 			$('#comp').empty();
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
@@ -58,16 +57,15 @@
 	function standGetter(){
 		$.getJSON(sURL+'getstand/?compname=' + $('#comp :selected').val(), function(json) {
 			console.log("Building stand list");
-			console.log(json)
 			$('#stand').empty();
 			$('#releasecoverage').empty();
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#stand').append('<option value="' +
-				obj.value + '">' + obj.label + '</option>');
+				obj['value'] + '">' + obj['label'] + '</option>');
 				
 				$('#releasecoverage').append('<option value="' +
-				obj.value + '">' + obj.label + '</option>');
+				obj['value'] + '">' + obj['label'] + '</option>');
 			});
 			switch ("false") {
 				case $('#testplan').attr('aria-hidden'): { MDSGetter('usual'); loadMDSCollection(); }; break;
@@ -82,7 +80,6 @@
 		$('#nameMDS').empty();
 		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
 			console.log("Building MDS list");
-			console.log(json)
 			$('#nameMDS').empty();
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
@@ -133,6 +130,32 @@
 				'<td>' + '<input type="time" class="time" name="' + obj['label'] + '" value="'+obj['oldtime']+'" /></td>' + '</tr>');
 			});
 			$('#loaderScr').text('Time table from '+$('#comp :selected').val()+' is loaded');
+			$('#loaderScr').fadeIn('fast');
+		});
+	}
+
+	function testCoverageGetter() {
+		$('#loaderScr').fadeOut('fast');
+		this.makeStringFromArray = function(aArr) {
+			var str = '';
+			aArr.forEach(function(val){
+				str += '<div class="uncovered_test">'+val+'</div>\n';
+			});
+			return str;
+		};
+		// Parsing answer for table data query
+		$.getJSON(sURL+'gettestcoverage/?release='+$('#releasecoverage :selected').val(), function(json) {
+			console.log("Building coverage table");
+			$('#covertable').empty();
+			$('#covertable').append('<tr><td><b>Приоритет</b></td>'+
+									'<td><b>Список тестов</b></td></tr>\n');
+			// Filling table from JSON
+			$.each(json.dataArray, function(i, obj) {
+				$('#covertable').append('<tr>' +
+				'<td class="test_priority">' + obj['name'] + '</td>' +
+				'<td>' + this.makeStringFromArray(obj['value']) + '</td></tr>\n');
+			});
+			$('#loaderScr').text('Test coverage from '+$('#releasecoverage :selected').val()+' is loaded');
 			$('#loaderScr').fadeIn('fast');
 		});
 	}
@@ -225,27 +248,6 @@
 			}
 		});
 	}
-
-	function coverageGetter() {
-		$('#loaderScr').fadeOut('fast');
-		var sURLget = sURL+'getCoverage?compname=';
-		$.ajax({
-			url: sURLget.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#releasecoverage :selected').val()
-		}).done(function(data){
-			console.log("Building covertable");
-			$('#covertable').empty();
-			// Filling table from JSON
-			$.each(data.dataArray, function(i, obj) {
-				$('#covertable').append('<tr>\n');
-				$.each(obj[i], function(j, item) {
-					$('#covertable').append('<td><b>'+ item[j] +'</b></td>\n');
-				});
-				$('#covertable').append('<\tr>\n');
-			});
-			$('#loaderScr').text('Coverage results for '+$('#comp :selected').val()+' is loaded');
-			$('#loaderScr').fadeIn('fast');
-		});
-	};
 
 	function pythonSetter(receiveMode) {
 		var sURLset;
@@ -380,7 +382,7 @@
 
 	// getting MDS 
 	// filling stand names of selected computer
-	$('#comp').change(standGetter());
+	$('#comp').change(function (){ standGetter(); });
 	// get MDS list and test plan
 	$('#stand').change(function(){
 		if (!!$('#testplan').attr('aria-hidden')) { MDSGetter('usual'); loadMDSCollection(); }
@@ -397,8 +399,8 @@
 	$('#starttimehref').click(function (){ timingGetter(); });
 
 	// getting test coverage results
-	$('#coveragehref').click(function (){ coverageGetter(); });
-	$('#releasecoverage').change(function (){ coverageGetter(); });
+	$('#coveragehref').click(function (){ testCoverageGetter(); });
+	$('#releasecoverage').change(function (){ testCoverageGetter(); });
 	/* ===Getting functions=== */
 
 	/* ===Saving and backups=== */
