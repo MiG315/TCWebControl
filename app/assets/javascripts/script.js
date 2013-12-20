@@ -83,8 +83,8 @@ $(document).ready(function() {
 					dataObj.datasets[i].strokeColor = hardcodedColors[i][1];
 					dataObj.datasets[i].pointColor = dataObj.datasets[i].strokeColor;
 				} else {
-					dataObj.datasets[i].fillColor = "rgba("+Math.floor(Math.random()*(255-0)+0)+","+Math.floor(Math.random()*(255-0)+0)+","+Math.floor(Math.random()*(255-0)+0)+",0.3)";
-					dataObj.datasets[i].strokeColor = "rgba("+Math.floor(Math.random()*(255-0)+0)+","+Math.floor(Math.random()*(255-0)+0)+","+Math.floor(Math.random()*(255-0)+0)+",1)";
+					dataObj.datasets[i].fillColor = "rgba("+Math.floor(Math.random()*(255)+0)+","+Math.floor(Math.random()*(255)+0)+","+Math.floor(Math.random()*(255)+0)+",0.3)";
+					dataObj.datasets[i].strokeColor = "rgba("+Math.floor(Math.random()*(255)+0)+","+Math.floor(Math.random()*(255)+0)+","+Math.floor(Math.random()*(255)+0)+",1)";
 					dataObj.datasets[i].pointColor = dataObj.datasets[i].strokeColor;
 				}
 				dataObj.datasets[i].pointStrokeColor = "#fff";
@@ -117,7 +117,7 @@ $(document).ready(function() {
 /* For future use
     $('#tablegetter').click(function() {
 		// Parsing answer for table data query
-		$.getJSON('table.json', function(json) {
+		$.getJSON('gettesttime', function(json) {
 			console.log("Building table");
 			// Filling table from JSON
 			$.each(json.dataArray, function(i, obj) {
@@ -140,7 +140,7 @@ $(document).ready(function() {
 		$.getJSON('testjson/gettestlist', function(json) {
 			{
 				console.log("Building test list");
-				console.log(json)
+				console.log(json);
 				$('#testname').empty();
 				// Filling table from JSON
 				$.each(json.data, function(key,obj) {
