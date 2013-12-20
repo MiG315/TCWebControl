@@ -54,6 +54,32 @@
 		});
 	})();
 	
+	function getPriority() {
+		$('#criticalparam').empty();
+		$.getJSON(sURL+'getpriority/?release=' + $('#release :selected').val(), function(json) {
+			console.log("Building criticalparam list");
+			$('#criticalparam').empty();
+			// Filling table from JSON
+			$.each(json.data, function(key,obj) {
+				$('#criticalparam').append('<option value="' +
+				obj.value + '">' + obj.value + '</option>');
+			});
+		});
+	}
+	
+	function getExecType() {
+		$('#periodicparam').empty();
+		$.getJSON(sURL+'getexectype/?release=' + $('#release :selected').val(), function(json) {
+			console.log("Building periodicparam list");
+			$('#periodicparam').empty();
+			// Filling table from JSON
+			$.each(json.data, function(key,obj) {
+				$('#periodicparam').append('<option value="' +
+				obj.value + '">' + obj.value + '</option>');
+			});
+		});
+	}
+	
 	function standGetter(){
 		$.getJSON(sURL+'getstand/?compname=' + $('#comp :selected').val(), function(json) {
 			console.log("Building stand list");
@@ -68,7 +94,7 @@
 				obj['value'] + '">' + obj['label'] + '</option>');
 			});
 			switch ("false") {
-				case $('#testplan').attr('aria-hidden'): { MDSGetter('usual'); loadMDSCollection(); }; break;
+				case $('#testplan').attr('aria-hidden'): { MDSGetter('usual'); loadMDSCollection(); getExecType(); getPriority(); }; break;
 				case $('#pythonscript').attr('aria-hidden'): pythonGetter('usual'); break;
 				case $('#starttime').attr('aria-hidden'): timingGetter(); break;
 				case $('#coverage').attr('aria-hidden'): coverageGetter(); break;
@@ -78,7 +104,7 @@
 
 	function loadMDSCollection() {
 		$('#nameMDS').empty();
-		$.getJSON(sURL+'getmdscollection/?&standname='+$('#stand :selected').val(), function(json) {
+		$.getJSON(sURL+'getmdscollection/?standname='+$('#stand :selected').val(), function(json) {
 			console.log("Building MDS list");
 			$('#nameMDS').empty();
 			// Filling table from JSON
@@ -167,9 +193,9 @@
 		var sURLget;
 		// Parsing answer for table data query
 		switch (receiveMode) {
-			case 'usual':	sURLget = sURL+'getPython?compname='; break;
-			case 'repo':	sURLget = sURL+'getPythonFromRepo?compname='; break;
-			case 'backup':	sURLget = sURL+'getPythonFromBackup?compname='; break;
+			case 'usual':	sURLget = sURL+'getPython/?compname='; break;
+			case 'repo':	sURLget = sURL+'getPythonFromRepo/?compname='; break;
+			case 'backup':	sURLget = sURL+'getPythonFromBackup/?compname='; break;
 		}
 		$.ajax({
 			url: sURLget.toLowerCase()+$('#comp :selected').val()
@@ -209,12 +235,14 @@
 		};
 		// Parsing answer for table data query
 		switch (receiveMode) {
-			case 'usual':			sURLget = sURL+'getMDS?compname='; break;
-			case 'repo':			sURLget = sURL+'getMDSRepo?compname='; break;
-			case 'backup':			sURLget = sURL+'getMDSBackup?compname='; break;
-			case 'getMDSByName':	sURLget = sURL+'getMDSByName?compname='; break;
+			case 'usual':			sURLget = sURL+'getMDS/?compname='; break;
+			case 'repo':			sURLget = sURL+'getMDSRepo/?compname='; break;
+			case 'backup':			sURLget = sURL+'getMDSBackup/?compname='; break;
+			case 'getMDSByName':	sURLget = sURL+'getMDSByName/?compname='; break;
 		}
-		$.getJSON(sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():''), function(json) {
+		$.getJSON((receiveMode !== "applyToTree")? (sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():'')):
+				  sURL+'generatesingletestplan?release=' + $('#release :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val(),
+				  function(json) {
 			loadedData = json.data;
 			$("#testsTree")
 				.jstree({
@@ -396,6 +424,8 @@
 	$('#getMDSFromBackup').click(function (){ MDSGetter('backup'); });
 	// getting MDS by name
 	$('#nameMDS').change(function (){ MDSGetter('getMDSByName'); });
+	// getting MDS by name
+	$('#applyMDS').change(function (){ MDSGetter('applyToTree'); });
 
 	// getting start stand timing when tab clicked
 	$('#starttimehref').click(function (){ timingGetter(); });
