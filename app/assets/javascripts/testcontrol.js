@@ -48,7 +48,7 @@
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#comp').append('<option value="' +
-				obj.value + '">' + obj.label + '</option>');
+				obj['value'] + '">' + obj['label'] + '</option>');
 			});
 		standGetter();
 		});
@@ -62,7 +62,7 @@
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#criticalparam').append('<option value="' +
-				obj.value + '">' + obj.value + '</option>');
+				obj['value'] + '">' + obj['label'] + '</option>');
 			});
 		});
 	}
@@ -75,7 +75,7 @@
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#periodicparam').append('<option value="' +
-				obj.value + '">' + obj.value + '</option>');
+				obj['value'] + '">' + obj['label'] + '</option>');
 			});
 		});
 	}
@@ -110,7 +110,7 @@
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#nameMDS').append('<option value="' +
-				obj.value + '">' + obj.value + '</option>');
+				obj['value'] + '">' + obj['value'] + '</option>');
 			});
 		});
 	}
