@@ -56,7 +56,7 @@
 	
 	function getPriority() {
 		$('#criticalparam').empty();
-		$.getJSON(sURL+'getpriority/?release=' + $('#release :selected').val(), function(json) {
+		$.getJSON(sURL+'getpriority/?release=' + $('#stand :selected').val(), function(json) {
 			console.log("Building criticalparam list");
 			$('#criticalparam').empty();
 			// Filling table from JSON
@@ -69,7 +69,7 @@
 	
 	function getExecType() {
 		$('#periodicparam').empty();
-		$.getJSON(sURL+'getexectype/?release=' + $('#release :selected').val(), function(json) {
+		$.getJSON(sURL+'getexectype/?release=' + $('#stand :selected').val(), function(json) {
 			console.log("Building periodicparam list");
 			$('#periodicparam').empty();
 			// Filling table from JSON
@@ -241,7 +241,7 @@
 			case 'getMDSByName':	sURLget = sURL+'getMDSByName/?compname='; break;
 		}
 		$.getJSON((receiveMode !== "applyToTree")? (sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():'')):
-				  sURL+'generatesingletestplan?release=' + $('#release :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val(),
+				  sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val(),
 				  function(json) {
 			loadedData = json.data;
 			$("#testsTree")
