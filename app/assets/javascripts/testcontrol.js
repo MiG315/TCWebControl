@@ -283,8 +283,8 @@
 		var sURLset;
 		$('#loaderScr').fadeOut('fast');
 		switch (receiveMode) {
-			case 'save':	sURLset = sURL+'receivePython?compname='; break;
-			case 'backup':	sURLset = sURL+'makePythonBackup?compname='; break;
+			case 'save':	sURLset = sURL+'receivePython/?compname='; break;
+			case 'backup':	sURLset = sURL+'makePythonBackup/?compname='; break;
 		}
 		if (confirm('Вы уверены?')) {
 			var pythonSc = {script:""};
@@ -325,9 +325,9 @@
 			return data;
 		};
 		switch (receiveMode) {
-			case 'save':	sURLset = sURL+'receiveMDS?compname='; break;
-			case 'backup':	sURLset = sURL+'makeMDSBackup?compname='; break;
-			case 'saveMDSWithName':	sURLset = sURL+'saveMDSWithName?compname='; break;
+			case 'save':	sURLset = sURL+'receiveMDS/?compname='; break;
+			case 'backup':	sURLset = sURL+'makeMDSBackup/?compname='; break;
+			case 'saveMDSWithName':	sURLset = sURL+'saveMDSWithName/?compname='; break;
 		}
 		if (confirm('Вы уверены?')) {
 			var MDSData = {data:""};
@@ -379,7 +379,7 @@
 	}
 
 	function deleteMDSByName() {
-		var sURLset = sURL+'deleteMDSByName?compname=';
+		var sURLset = sURL+'deleteMDSByName/?compname=';
 		if (confirm('Вы уверены?')) {
 			$.ajax({
 				url:			sURLset.toLowerCase()+$('#comp :selected').val()+'&standname='+$('#stand :selected').val()+'&mdsname='+$('#nameMDS').val(),
@@ -425,7 +425,7 @@
 	// getting MDS by name
 	$('#nameMDS').change(function (){ MDSGetter('getMDSByName'); });
 	// getting MDS by name
-	$('#applyMDS').change(function (){ MDSGetter('applyToTree'); });
+	$('#applyMDS').click(function (){ MDSGetter('applyToTree'); });
 
 	// getting start stand timing when tab clicked
 	$('#starttimehref').click(function (){ timingGetter(); });
