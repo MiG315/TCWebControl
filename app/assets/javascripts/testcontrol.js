@@ -50,7 +50,7 @@
 	}
 
 	// makes string containing selected items in dropdown checkboxes
-	function makeCheckedList(element, event) {
+	function makeCheckedList(element) {
 		var keyStr = '';
 		var keyArr = element.dropdownCheckbox("checked");
 		var len = keyArr.length;
@@ -60,7 +60,6 @@
 			}
 		}
 		$("#"+element.attr("id")+"checked")[0].innerHTML = "Selected: [" + keyStr + "]";
-		console.log(event);
 		console.log(keyStr);
 	}
 
@@ -478,8 +477,8 @@
 	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").click(function() { makeCheckedList($("#criticalparam")); });
+	$("#criticalparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").mouseup(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").click(function() { makeCheckedList($("#periodicparam")); });
+	$("#periodicparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").mouseup(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
