@@ -2,17 +2,34 @@
 <html>
 <head>
 	<title>test file</title>
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<link rel="stylesheets" href="/home/m0sk1t/WebstormProjects/TCWebControl/app/assets/stylesheets/bootstrap-dropdown-checkbox.css" />
+	<script src="/home/m0sk1t/WebstormProjects/TCWebControl/app/assets/javascripts/js/bootstrap-dropdown-checkbox.min.js"></script>
 </head>
 <body>
 	<div id="asd">asd</div>
 </body>
 <script>
 	$(document).ready(function() {
-		$("#asd").attr("style","background-color:#777777");
-		console.log($("#asd").attr("id"));
-		$("#asd")[0].val('3asd3');
+		$("#asd").dropdownCheckbox({
+			data:[  {id: 1, label: "Test1" },
+					{id: 2, label: "Test2" },
+					{id: 3, label: "Test3" }],
+			title: "aaa"
+		});
+		$("#asd > button").click(function(event) { makeCheckedList($("#asd"),event)});
+		function makeCheckedList(element, event) {
+			var keyStr = '';
+			var keyArr = element.dropdownCheckbox("checked");
+			var len = keyArr.length;
+			for (var i = 0; i < len; i++) {
+				if (keyArr[i]["isChecked"]) {
+					(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
+				}
+			}
+			console.log(keyStr);
+		}
 	});
 </script>
 </html>
