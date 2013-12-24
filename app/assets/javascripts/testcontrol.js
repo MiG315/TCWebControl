@@ -51,7 +51,7 @@
 	}
 
 	// makes string containing selected items in dropdown checkboxes
-	function makeCheckedList(element) {
+	function makeCheckedList(element, event) {
 		var keyStr = '';
 		var keyArr = element.dropdownCheckbox("checked");
 		var len = keyArr.length;
@@ -61,6 +61,8 @@
 			}
 		}
 		$("#"+element.attr("id")+"checked")[0].innerHTML = "[" + keyStr + "]";
+		console.log(event);
+		console.log(keyStr);
 	}
 
 	function getPriority() {
@@ -477,8 +479,8 @@
 	$('#x').click(nodeChecker('uncheck'));
 
 	// displays list of checked priority items
-	$("#criticalparam").change(makeCheckedList($("#criticalparam")));
+	$("#criticalparam").on('click', makeCheckedList($("#criticalparam"), event));
 	// displays list of checked periodic items
-	$("#periodicparam").change(makeCheckedList($("#periodicparam")));
+	$("#periodicparam").on('click', makeCheckedList($("#periodicparam"), event));
 	/*===Click part of interface===*/
 });
