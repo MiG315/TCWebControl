@@ -3,7 +3,7 @@
 	$("body").width("100%");
 
 	$('#version').empty();
-	$('#version').text('0.1.1 beta');
+	$('#version').text('release 0.1.0');
 	var sURL = 'http://172.20.5.130:3001/testcontrol/'; //server URL
 	if (!window.editor) {
 		window.editor = CodeMirror.fromTextArea(document.getElementById("plainscript"), {
@@ -16,20 +16,6 @@
 			tabMode: "shift"
 		});
 	}
-
-	// check selected items
-	$('#v').click(function() {
-		var tree = $.jstree._reference('#testsTree');
-		var selectedNodes = tree.get_selected();
-		tree.check_node(selectedNodes);
-	});
-
-	// uncheck selected items
-	$('#x').click(function() {
-		var tree = $.jstree._reference('#testsTree');
-		var selectedNodes = tree.get_selected();
-		tree.uncheck_node(selectedNodes);
-	});
 
 	// tabs init
 	(function() {
@@ -48,12 +34,36 @@
 			// Filling table from JSON
 			$.each(json.data, function(key,obj) {
 				$('#comp').append('<option value="' +
-				obj['value'] + '">' + obj['label'] + '</option>');
+					obj['value'] + '">' + obj['label'] + '</option>');
 			});
-		standGetter();
+			standGetter();
 		});
 	})();
-	
+
+	// checks or uncheks selected nodes
+	function nodeChecker(param) {
+		var tree = $.jstree._reference('#testsTree');
+		var selectedNodes = tree.get_selected();
+		switch (param) {
+			case 'check': tree.check_node(selectedNodes); break;
+			case 'uncheck': tree.uncheck_node(selectedNodes); break;
+			default : alert("Invalid check param for nodeChecker"); break;
+		}
+	}
+
+	// makes string containing selected items in dropdown checkboxes
+	function makeCheckedList(element) {
+		var keyStr = '';
+		var keyArr = element.dropdownCheckbox("checked");
+		var len = keyArr.length;
+		for (var i = 0; i < len; i++) {
+			if (keyArr[i]["isChecked"]) {
+				(i < len - 1)? keyStr += keyArr[i]["label"] + ";":keyStr += keyArr[i]["label"];
+			}
+		}
+		$("#"+element.attr("id")+"checked").val("[" + keyStr + "]");
+	}
+
 	function getPriority() {
 		$.getJSON(sURL+'getpriority/?release=' + $('#stand :selected').val(), function(json) {
 			console.log("Building criticalparam list");
@@ -459,5 +469,17 @@
 	$('#makeMDSBackup').click(function (){ MDSSetter('backup'); });
 	// try to save current timing on server
 	$('#savetiming').click(function (){ timingSetter(); });
-	/* ===Saving and backups=== */	
+	/* ===Saving and backups=== */
+
+	/*===Click part of interface===*/
+	// check selected items
+	$('#v').click(nodeChecker('check'));
+	// uncheck selected items
+	$('#x').click(nodeChecker('uncheck'));
+
+	// displays list of checked priority items
+	$("#criticalparam").click(makeCheckedList(this));
+	// displays list of checked periodic items
+	$("#periodicparam").click(makeCheckedList(this));
+	/*===Click part of interface===*/
 });
