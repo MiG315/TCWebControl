@@ -19,8 +19,7 @@
 	// tabs init
 	(function() {
 		$("#tabs").tabs();
-		$("#plainscript").height("100%");
-		$("#plainscript").width("100%");
+		$("#plainscript").height("100%").width("100%");
 	})();
 
 	// filling computer names
