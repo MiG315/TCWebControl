@@ -55,27 +55,23 @@
 	})();
 	
 	function getPriority() {
-		$('#criticalparam').empty();
 		$.getJSON(sURL+'getpriority/?release=' + $('#stand :selected').val(), function(json) {
 			console.log("Building criticalparam list");
-			$('#criticalparam').empty();
 			// Filling table from JSON
-			$.each(json.data, function(key,obj) {
-				$('#criticalparam').append('<option value="' +
-				obj['value'] + '">' + obj['label'] + '</option>');
+			$("#criticalparam").dropdownCheckbox({
+				data: json.data,
+				title: "Test priority"
 			});
 		});
 	}
 	
 	function getExecType() {
-		$('#periodicparam').empty();
 		$.getJSON(sURL+'getexectype/?release=' + $('#stand :selected').val(), function(json) {
 			console.log("Building periodicparam list");
-			$('#periodicparam').empty();
 			// Filling table from JSON
-			$.each(json.data, function(key,obj) {
-				$('#periodicparam').append('<option value="' +
-				obj['value'] + '">' + obj['label'] + '</option>');
+			$("#periodicparam").dropdownCheckbox({
+				data: json.data,
+				title: "Test periodic"
 			});
 		});
 	}
@@ -160,17 +156,16 @@
 		});
 	}
 
-	function makeStringFromArray(aArr) {
-		var str = '';
-		aArr.forEach(function(val){
-			str += '<div class="uncovered_test">'+val+'</div>\n';
-		});
-		return str;
-	}
-	
 	function testCoverageGetter() {
 		$('#loaderScr').fadeOut('fast');
-		
+		var makeStringFromArray = function (aArr) {
+			var str = '';
+			aArr.forEach(function(val){
+				str += '<div class="uncovered_test">'+val+'</div>\n';
+			});
+			return str;
+		};
+
 		// Parsing answer for table data query
 		$.getJSON(sURL+'gettestcoverage/?release='+$('#releasecoverage :selected').val(), function(json) {
 			console.log("Building coverage table");
@@ -233,6 +228,18 @@
 				}
 			}
 		};
+
+		var makeKeyString = function (element) {
+			var keyStr = '';
+			var keyArr = element.dropdownCheckbox("checked");
+			var len = keyArr.length;
+			for (var i = 0; i < len; i++) {
+				if (keyArr[i]["isChecked"]) {
+					(i < len - 1)? keyStr += keyArr[i]["label"] + ";":keyStr += keyArr[i]["label"];
+				}
+			}
+			return keyStr;
+		};
 		// Parsing answer for table data query
 		switch (receiveMode) {
 			case 'usual':			sURLget = sURL+'getMDS/?compname='; break;
@@ -242,7 +249,7 @@
 		}
 		console.log(sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val());
 		$.getJSON((receiveMode !== "applyToTree")? (sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():'')):
-				  sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val(),
+				  sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + makeKeyString($('#criticalparam')) + '&exectype=' + makeKeyString($('#periodicparam')) + '&timelimit=' + $('#workingtime').val(),
 				  function(json) {
 			loadedData = json.data;
 			$("#testsTree")

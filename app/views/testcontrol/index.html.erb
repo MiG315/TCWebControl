@@ -4,6 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheets" href="testcontrol.css" />
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheets" href="bootstrap-dropdown-checkbox.css" />
 		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 		<link href='http://fonts.googleapis.com/css?family=Play&subset=cyrillic' rel='stylesheet' type='text/css'>
@@ -13,6 +14,7 @@
 		<script src="/../assets/jquery.jstree.js"></script>
 		<script src="/../assets/jstreegrid.js"></script>
 		<script src="/../assets/jquery.hotkeys.js"></script>
+		<script src="/../assets/js/bootstrap-dropdown-checkbox.min.js"></script>
 		<script src="/../assets/testcontrol.js"></script>
 	</head>
 	<body>
@@ -50,10 +52,8 @@
 							<td>
 								<div class="panel">
 									<span>Время работы:</span><input type="time" id="workingtime" />
-									<select id="criticalparam" class="picker">
-									</select>
-									<select id="periodicparam" class="picker">
-									</select>
+                                    <div id="criticalparam"></div>
+                                    <div id="periodicparam"></div>
 									<input type="button" value="Применить к MDS" id="applyMDS" /><br />
 								</div>
 							</td>
