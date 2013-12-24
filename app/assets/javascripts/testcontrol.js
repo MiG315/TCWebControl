@@ -477,8 +477,8 @@
 	$('#x').click(nodeChecker('uncheck'));
 
 	// displays list of checked priority items
-	$("#criticalparam").change(makeCheckedList(this));
+	$("#criticalparam").change(makeCheckedList($("#criticalparam")));
 	// displays list of checked periodic items
-	$("#periodicparam").change(makeCheckedList(this));
+	$("#periodicparam").change(makeCheckedList($("#periodicparam")));
 	/*===Click part of interface===*/
 });
