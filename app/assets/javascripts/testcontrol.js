@@ -474,13 +474,13 @@
 
 	/*===Click part of interface===*/
 	// check selected items
-	$('#v').click(nodeChecker('check'));
+	$('#v').click(function() { nodeChecker('check'); });
 	// uncheck selected items
-	$('#x').click(nodeChecker('uncheck'));
+	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam").on('click', makeCheckedList($("#criticalparam"), event));
+	$("#criticalparam").change(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam").on('click', makeCheckedList($("#periodicparam"), event));
+	$("#periodicparam").change(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
