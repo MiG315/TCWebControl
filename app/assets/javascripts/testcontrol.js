@@ -245,7 +245,7 @@
 			var len = keyArr.length;
 			for (var i = 0; i < len; i++) {
 				if (keyArr[i]["isChecked"]) {
-					(i < len - 1)? keyStr += keyArr[i]["label"] + ";":keyStr += keyArr[i]["label"];
+					(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
 				}
 			}
 			return keyStr;
