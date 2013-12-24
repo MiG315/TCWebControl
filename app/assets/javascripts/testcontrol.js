@@ -1,6 +1,5 @@
 ﻿$(document).ready(function() {
-	$("body").height("100%");
-	$("body").width("100%");
+	$("body").height("100%").width("100%");
 
 	$('#version').empty();
 	$('#version').text('release 0.1.0');
@@ -61,7 +60,7 @@
 				(i < len - 1)? keyStr += keyArr[i]["label"] + ";":keyStr += keyArr[i]["label"];
 			}
 		}
-		$("#"+element.attr("id")+"checked").val("[" + keyStr + "]");
+		$("#"+element.attr("id")+"checked")[0].innerHTML = "[" + keyStr + "]";
 	}
 
 	function getPriority() {
@@ -478,8 +477,8 @@
 	$('#x').click(nodeChecker('uncheck'));
 
 	// displays list of checked priority items
-	$("#criticalparam").click(makeCheckedList(this));
+	$("#criticalparam").change(makeCheckedList(this));
 	// displays list of checked periodic items
-	$("#periodicparam").click(makeCheckedList(this));
+	$("#periodicparam").change(makeCheckedList(this));
 	/*===Click part of interface===*/
 });
