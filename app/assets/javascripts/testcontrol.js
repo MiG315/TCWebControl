@@ -52,7 +52,7 @@
 	// makes string containing selected items in dropdown checkboxes
 	function makeCheckedList(element) {
 		var keyStr = '';
-		element.onClickCheckbox();
+		element.dropdownCheckbox.onClickCheckbox();
 		var keyArr = element.dropdownCheckbox("checked");
 		var len = keyArr.length;
 		for (var i = 0; i < len; i++) {
