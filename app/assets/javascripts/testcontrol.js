@@ -240,6 +240,7 @@
 			case 'backup':			sURLget = sURL+'getMDSBackup/?compname='; break;
 			case 'getMDSByName':	sURLget = sURL+'getMDSByName/?compname='; break;
 		}
+		console.log(sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val());
 		$.getJSON((receiveMode !== "applyToTree")? (sURLget.toLowerCase() + $('#comp :selected').val() + '&standname=' + $('#stand :selected').val() + ((receiveMode==='getMDSByName')?'&mdsname=' + $('#nameMDS').val():'')):
 				  sURL+'generatesingletestplan?release=' + $('#stand :selected').val() + '&priority=' + $('#criticalparam :selected').val() + '&exectype=' + $('#periodicparam :selected').val() + '&timelimit=' + $('#workingtime').val(),
 				  function(json) {
