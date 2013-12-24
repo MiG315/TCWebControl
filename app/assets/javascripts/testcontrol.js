@@ -478,8 +478,8 @@
 	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").change(function() { makeCheckedList($("#criticalparam")); });
+	$("#criticalparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").click(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").change(function() { makeCheckedList($("#periodicparam")); });
+	$("#periodicparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").click(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
