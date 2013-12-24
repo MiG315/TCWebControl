@@ -477,8 +477,8 @@
 	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").mouseup(function() { makeCheckedList($("#criticalparam")); });
+	$("#criticalparam > button").onmouseup(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam > div.dropdown-checkbox-content > ul.dropdown-checkbox-menu > li > div.layout > input").mouseup(function() { makeCheckedList($("#periodicparam")); });
+	$("#periodicparam > button").onmouseup(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
