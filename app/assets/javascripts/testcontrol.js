@@ -477,8 +477,8 @@
 	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam > button").onmouseup(function() { makeCheckedList($("#criticalparam")); });
+	$("#criticalparam").onClickCheckbox(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam > button").onmouseup(function() { makeCheckedList($("#periodicparam")); });
+	$("#periodicparam").onClickCheckbox(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
