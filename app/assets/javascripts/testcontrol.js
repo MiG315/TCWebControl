@@ -56,7 +56,7 @@
 		var len = keyArr.length;
 		for (var i = 0; i < len; i++) {
 			if (keyArr[i]["isChecked"]) {
-				(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
+				(i < len - 1)? keyStr += keyArr[i]["label"] + ',':keyStr += keyArr[i]["label"];
 			}
 		}
 		$("#"+element.attr("id")+"checked")[0].innerHTML = "Selected: [" + keyStr + "]";
@@ -477,8 +477,8 @@
 	$('#x').click(function() { nodeChecker('uncheck'); });
 
 	// displays list of checked priority items
-	$("#criticalparam > button").click(function() { makeCheckedList($("#criticalparam")); });
+	$("#criticalparam").change(function() { makeCheckedList($("#criticalparam")); });
 	// displays list of checked periodic items
-	$("#periodicparam > button").click(function() { makeCheckedList($("#periodicparam")); });
+	$("#periodicparam").change(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
