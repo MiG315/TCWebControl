@@ -38,6 +38,10 @@
 		});
 	})();
 
+	$("body").click(function specialForAlexanderBorodachBleat() {
+		makeCheckedList("#criticalparam");
+		makeCheckedList("#periodicparam");
+	});
 	// checks or uncheks selected nodes
 	function nodeChecker(param) {
 		var tree = $.jstree._reference('#testsTree');
@@ -52,14 +56,14 @@
 	// makes string containing selected items in dropdown checkboxes
 	function makeCheckedList(element) {
 		var keyStr = '';
-		var keyArr = element.dropdownCheckbox("checked");
+		var keyArr = $(element).dropdownCheckbox("checked");
 		var len = keyArr.length;
 		for (var i = 0; i < len; i++) {
 			if (keyArr[i]["isChecked"]) {
 				(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
 			}
 		}
-		$("#"+element.attr("id")+"checked")[0].innerHTML = "Selected: [" + keyStr + "]";
+		$(element + "checked")[0].innerHTML = "Selected: [" + keyStr + "]";
 		console.log(keyStr);
 	}
 
@@ -72,7 +76,7 @@
 				title: "Test priority"
 			});
 			// displays list of checked priority items
-			$("#criticalparam > button").click(function() { makeCheckedList($("#criticalparam")); });
+			$("#criticalparam > button").click(function() { makeCheckedList("#criticalparam"); });
 		});
 	}
 	
@@ -85,7 +89,7 @@
 				title: "Test periodic"
 			});
 			// displays list of checked periodic items
-			$("#periodicparam > button").click(function() { makeCheckedList($("#periodicparam")); });
+			$("#periodicparam > button").click(function() { makeCheckedList("#periodicparam"); });
 		});
 	}
 
@@ -381,7 +385,7 @@
 		if (confirm('Вы уверены?')) {
 			var timingArr = {name:[]};
 			$('.time').each(function(){
-				var a = {name : $(this).prop('name'), value : $(this).prop('value')}
+				var a = { name : $(this).prop('name'), value : $(this).prop('value') };
 				timingArr["name"].push(a);
 			});
 			console.log('timing forming success!'+timingArr);
@@ -421,7 +425,7 @@
 				}
 			});
 		}
-	};
+	}
 
 	/* ===Getting functions=== */
 	// getting plain Python settings text
