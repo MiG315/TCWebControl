@@ -52,7 +52,6 @@
 	// makes string containing selected items in dropdown checkboxes
 	function makeCheckedList(element) {
 		var keyStr = '';
-		element.dropdownCheckbox.onClickCheckbox();
 		var keyArr = element.dropdownCheckbox("checked");
 		var len = keyArr.length;
 		for (var i = 0; i < len; i++) {
@@ -60,7 +59,7 @@
 				(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
 			}
 		}
-		$("#"+element.attr("id")+"checked")[0].innerHTML = "Selected: [" + keyStr + "]";
+		$("#"+element.attr("id")+"checked").val("Selected: [" + keyStr + "]");
 		console.log(keyStr);
 	}
 
