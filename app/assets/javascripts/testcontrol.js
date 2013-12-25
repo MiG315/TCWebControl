@@ -71,6 +71,8 @@
 				data: json.data,
 				title: "Test priority"
 			});
+			// displays list of checked priority items
+			$("#criticalparam > button").click(function() { makeCheckedList($("#criticalparam")); });
 		});
 	}
 	
@@ -82,9 +84,11 @@
 				data: json.data,
 				title: "Test periodic"
 			});
+			// displays list of checked periodic items
+			$("#periodicparam > button").click(function() { makeCheckedList($("#periodicparam")); });
 		});
 	}
-	
+
 	function standGetter(){
 		$.getJSON(sURL+'getstand/?compname=' + $('#comp :selected').val(), function(json) {
 			console.log("Building stand list");
@@ -475,10 +479,5 @@
 	$('#v').click(function() { nodeChecker('check'); });
 	// uncheck selected items
 	$('#x').click(function() { nodeChecker('uncheck'); });
-
-	// displays list of checked priority items
-	$("#criticalparam > button").click(function() { makeCheckedList($("#criticalparam")); });
-	// displays list of checked periodic items
-	$("#periodicparam > button").click(function() { makeCheckedList($("#periodicparam")); });
 	/*===Click part of interface===*/
 });
