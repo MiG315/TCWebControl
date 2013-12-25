@@ -59,7 +59,7 @@
 				(i < len - 1)? keyStr += keyArr[i]["label"] + ",":keyStr += keyArr[i]["label"];
 			}
 		}
-		$("#"+element.attr("id")+"checked").innerHTML = "Selected: [" + keyStr + "]";
+		$("#"+element.attr("id")+"checked")[0].innerHTML = "Selected: [" + keyStr + "]";
 		console.log(keyStr);
 	}
 
