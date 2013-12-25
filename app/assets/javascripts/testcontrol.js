@@ -2,7 +2,7 @@
 	$("body").height("100%").width("100%");
 
 	$('#version').empty();
-	$('#version').text('release 0.1.0');
+	$('#version').text('0.1.0 release');
 	var sURL = 'http://172.20.5.130:3001/testcontrol/'; //server URL
 	if (!window.editor) {
 		window.editor = CodeMirror.fromTextArea(document.getElementById("plainscript"), {
