@@ -79,12 +79,18 @@ RusrailsBlog::Application.routes.draw do
   get "testcontrol/getmdsbackup"
   get "testcontrol/getmdscollection"
   get "testcontrol/getmdsbyname"
-  
+  get "testcontrol/gettestcoverage"
+
+  get "testcontrol/getpriority"
+  get "testcontrol/getexectype"
+  get "testcontrol/generatesingletestplan"
+
   post "testcontrol/receivetiming"
   post "testcontrol/receivepython"
   post "testcontrol/makepythonbackup"
   post "testcontrol/receivemds"
   post "testcontrol/savemdswithname"
+  post "testcontrol/deletemdsbyname"
 
   # test
   get "testjson/testsend"

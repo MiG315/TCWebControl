@@ -204,10 +204,14 @@ class TestcontrolController < ApplicationController
 	render :text => rawarray.to_json
   end
 
-  def getmdscollection()
+  def getmdscollection
+	worker = params[:compname]
+	standName = params[:standname]
+  	namedMDS = MongoMDSConnector.instance.getAllNamedRelease(standName)
 
-  	namedMDS = MongoMDSConnector.instance.getAllNamed()
-
+  	puts "compname = #{worker.to_s}"
+  	puts "stand name = #{standName.to_s}"
+  	puts "getmdscollection"
 	workerList =[]
 
 	namedMDS.each do |x|
@@ -256,17 +260,18 @@ class TestcontrolController < ApplicationController
 	treeNew = Hash.new()
 	treeNew[:Root] = tree
 
-	MongoMDSConnector.instance.setMds(mdsName, "", "", treeNew)
-	MongoMDSConnector.instance.setModificationTime(mdsName, "", "", (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
+	MongoMDSConnector.instance.setMds(mdsName, "", standName, treeNew)
+	MongoMDSConnector.instance.setModificationTime(mdsName, "", standName, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
 
 	render :text => "all right!"
   end
 
   def getmdsbyname()
 	worker = params[:compname]
-	mdsName = params[:standname]
+	mdsName = params[:mdsname]
+	releaseName = params[:standname]
 	# получаем MDS из базы
-	jsonNewTree = MongoMDSConnector.instance.getMds(mdsName, "", "")
+	jsonNewTree = MongoMDSConnector.instance.getMds(mdsName, "", releaseName)
 	#jsonNewTree = JSON.parse(jsonNewTree)
 	#puts "data = #{jsonNewTree}"
 	puts "class = #{jsonNewTree.class}"
@@ -298,6 +303,131 @@ class TestcontrolController < ApplicationController
 	
 	render :text => rawarray.to_json
   end
+
+  def deletemdsbyname()
+	worker = params[:compname]
+	mdsName = params[:mdsname]
+	standName = params[:standname]
+	MongoMDSConnector.instance.removeMds(mdsName, "", standName)
+	render :text => "ok"
+  end
+
+  # GET EXECUTING TEST LIST
+  def gettestcoverage
+	standName = params[:release]
+	# получаем список тестов
+
+	testlist = ''
+	TCPSocket.open('172.20.5.130', 2001){ |client|
+	# say Hello to server
+	client.puts "MasterOnline"
+	client.gets
+	client.puts "master_set get_test_coverage " + standName
+	#workerList = JSON.parse(client.gets)
+	testlist = client.gets
+	client.puts "master_set close_connection"
+	}
+	puts "TestcontrolController - gettestcoverage"
+	test = '{"dataArray" : [{"name" : "PriorityName", "value" : ["testName1", "testName2", "testName3"]}, {"name" : "PriorityName", "value" : ["testName1", "testName2", "testName3"]}]}'
+	render :text => testlist
+  end
+
+  # AUTO GENERATING TEST PLAN
+  def generatesingletestplan
+	release = params[:release]
+	priority = params[:priority]
+	exectype = params[:exectype]
+	timelimit = params[:timelimit]
+	# получаем с сервера нужные данные
+	mds = Hash.new()
+	TCPSocket.open('172.20.5.130', 2001){ |client|
+		# say Hello to server
+		client.puts "MasterOnline"
+		client.gets
+		client.puts "master_set get_singletestplan #{release} #{priority} #{exectype} #{timelimit}"
+		mds = JSON.parse(client.gets)
+		client.puts "master_set close_connection"
+	}
+	# подготавливаем данные для отправки на веб страницу
+	newTree = mds
+	#newTree = newTree["TestItem"][0]
+	# новое дерево
+	# вводим фиктивную вершину
+	value = Hash.new()
+	value[:data] = "Тестирование " + release
+		falseAttr = Hash.new()
+		falseAttr[:class] = "jstree-checked"
+		falseAttr[:id] = "0001"
+		falseAttr[:MethodName] = ""
+		falseAttr[:UnitName] = ""
+	value[:attr] = falseAttr
+	# получаем дерево
+	childrens = Array.new()
+	newTree["TestItem"].each do |x|
+		tree = createTreeForView(x)
+		childrens.push(tree)
+	end
+	value[:children] = childrens
+	rawarray = { :data => value}
+	mds_for_send = rawarray.to_json
+	render :text => mds_for_send
+  end
+
+
+  def getpriority
+  	# сделать через обращение к серверу
+	priority = Array.new()
+	TCPSocket.open('172.20.5.130', 2001){ |client|
+		# say Hello to server
+		client.puts "MasterOnline"
+		client.gets
+		client.puts "master_set get_priorities"
+		priority = JSON.parse(client.gets)
+		client.puts "master_set close_connection"
+	}
+	puts priority
+  	# получили список приориететов
+  	# переводим в нужный нам формат
+  	dataArray = Array.new()
+  	priority.each do |x|
+  		value = Digest::SHA1.hexdigest(x)
+  		label = x.force_encoding(Encoding::UTF_8)
+  		dataArray.push({:id => label, :label => label})
+  	end
+  	data = Hash.new()
+  	data[:data] = dataArray
+  	render :text => data.to_json
+  end
+
+  def getexectype
+  	# сделать через обращение к серверу
+  	exectype = Array.new()
+	TCPSocket.open('172.20.5.130', 2001){ |client|
+		# say Hello to server
+		client.puts "MasterOnline"
+		client.gets
+		client.puts "master_set get_exectype"
+		exectype = JSON.parse(client.gets)
+		client.puts "master_set close_connection"
+	}
+	puts "HEERE ARE getexectype"
+	puts exectype
+  	# получили список приориететов
+  	# переводим в нужный нам формат
+  	dataArray = Array.new()
+  	exectype.each do |x|
+  		value = Digest::SHA1.hexdigest(x)
+  		label = x
+  		dataArray.push({:id => value, :label => label})
+  	end
+  	data = Hash.new()
+  	data[:data] = dataArray
+  	render :text => data.to_json
+  end
+
+  ###############################################
+  #### => хелперы
+  ###############################################
   
   private
   	def createTreeForView(_tree)
@@ -305,7 +435,7 @@ class TestcontrolController < ApplicationController
 
 		treeElem[:data] = _tree["name"]
 		attrElem = Hash.new()
-		if _tree["enabled"] == '-1'
+		if _tree["enabled"] == '-1' or _tree[:enabled] == '-1'
 			attrElem[:class] = 'jstree-checked'
 		else
 			attrElem[:class] = 'jstree-unchecked'

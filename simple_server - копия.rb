@@ -6,6 +6,7 @@
     require './/app//helpers//dbconnector.rb'
     require './/app//helpers//testlink_utils.rb'
     require "interface"
+    #require 'marshal'
 
 
 
@@ -361,6 +362,7 @@ class MDSUtils
     testlink = TestLinkUtils.new()
     testlink.connectToDB()
     priorities = testlink.getPriorities()
+    puts " OLOLO  #{priorities}"
     # создаем хэш, где будут лежать наши данные
     # вида [{name => PriorityName, value => [testName1, testName2, ..., testName3]}, {...}, ...]
     sourceTree = getTreeWIthTestLinkParams(_release)
@@ -427,32 +429,20 @@ class MDSUtils
     resultTree[:MethodName] = _tree[:MethodName]
     resultTree[:UnitName] = _tree[:UnitName]
     resultTree[:name] = _tree[:name]    
-    resultTree[:enabled] = '0'
+    resultTree[:enabled] = 0
     # проверяем параметры дерева, включить ноду или выключить
     if _tree.has_key?(:param)
-      # #puts "DEBUG 434 - key param presents"
-      # puts "DEBUG 436 - generateMDSTreeWithRestriction - type of _priority = #{_priority.class}"
-      # puts "DEGUB 437 - generateMDSTreeWithRestriction - value of _priority = #{_priority}"
-      # puts "DEBUG 438 - generateMDSTreeWithRestriction - first elem of _ priority = #{_priority[0].class}"
-      # puts "DEBUG 439 - generateMDSTreeWithRestriction - class of _tree[:param][:priority] = #{_tree[:param][:priority].class}"
-      # puts "DEBUG 440 - generateMDSTreeWithRestriction - value of _tree[:param][:priority] = #{_tree[:param][:priority]}"
-      # puts "DEBUG 441 - generateMDSTreeWithRestriction - test name = #{_tree[:name]}"
-      if _priority.include?(_tree[:param][:priority].to_s) and _execType.include?(_tree[:param][:exectype].to_s)
-         # puts "DEBUG 437 - test will be enabled"
-        resultTree[:enabled] = '-1'
+      puts "DEBUG 434 - key param presents"
+      if _priority.include?(_tree[:param][:priority]) and _execType.include?(_tree[:param][:exectype])
+        puts "DEBUG 437 - test will be enabled"
+        resultTree[:enabled] = -1
       else
-        # включаем каждую группу
-        if _tree.has_key?(:TestItem)
-          resultTree[:enabled] = '-1'
-        end
-        # puts "DEBUG 440 - test will not be enabled"
-        # puts "test priority = #{_tree[:param][:priority]}"
-        # puts "test exec type = #{_tree[:param][:exectype]}"
+        puts "DEBUG 440 - test will not be enabled"
+        puts "test priority = #{_tree[:param][:priority]}"
+        puts "test exec type = #{_tree[:param][:exectype]}"
       end
     else
-      # puts "DEBUG 438 - no key param"
-      # проверяем, является ли эта штука тестом или группой
-      # если это группа, то надо включить, иначе оставить, как есть
+      puts "DEBUG 438 - no key param"
               #param[:priority] = _TestLinkParams[digitalUnitName.to_s][:priority]
               #param[:execTime] = _TestLinkParams[digitalUnitName.to_s][:exectype]
     end
@@ -491,11 +481,6 @@ class MDSUtils
     return dbImprovedTree
   end
 
-  # def convertToDBTree(_Tree)
-  #   # получаем список всех детей из нашего нормального дерева
-  #   subTree = _Tree["TestItem"]
-  #   # добавляем в дерево, подготовленное для записи 
-  # end
   ##### #### ####
   ##### helpers
   ##### #### ####
@@ -1106,42 +1091,6 @@ class Server < GServer
                   exectype = testlink.getTestExecType()
                   testlink.disconnectFromDB()
                   client.puts exectype.to_json
-                when "get_singletestplan"
-                  release = message[2]
-                  priority = message[3]
-                  exectype = message[4]
-                  timelimit = message[5]
-
-                  puts "[DEBUG] - 1105"
-                  puts "priority = #{priority}"
-                  puts "exectype = #{exectype}"
-                  # хак на хаке
-                  # создаем массив с приориететами
-                  puts "pririty class #{priority.class}"
-                  puts "exectype class = #{exectype.class}"
-                  priorityArray = Array.new()
-                  execTypeArray = Array.new()
-
-                  if priority.class == String
-                    if priority.length > 0 
-                      tempArray = priority.split(',')
-                      tempArray.each do |x|
-                        priorityArray.push(x)
-                      end
-                    end
-                  end
-                  # создаем массив с типом запуска
-                  if exectype.class == String 
-                    if exectype.length > 0
-                      tempArray = exectype.split(',')
-                      tempArray.each do |x|
-                        execTypeArray.push(x)
-                      end
-                    end
-                  end
-                  puts "this is that I use = #{priorityArray} , #{execTypeArray}"
-                  mdsToReturn = MDSUtils.instance.createTestPlanByParam(release, priorityArray, execTypeArray, timelimit)
-                  client.puts mdsToReturn.to_json
                 when "close_connection"
                   # ok lets close connection loop
                   puts "Master closed connection;"

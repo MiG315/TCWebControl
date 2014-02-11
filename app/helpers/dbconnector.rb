@@ -123,6 +123,14 @@ class MongoMDSConnector
 		return result
 	end
 
+	def removeMds(_name, _workerName, _release)
+		if not checkMdsForExistance(_name, _workerName, _release)
+			puts "MongoMDSConnector.removeMds No MDS with name = #{_name}, worker name = #{_workerName}, release = #{_release}"
+		else
+			@mdsColl.remove({"name" => _name, "workerName" => _workerName, "release" => _release})
+		end				
+	end
+
 	def setName(_name, _workerName, _release, _newName)
 		if checkMdsForExistance(_name, _workerName, _release)
 			@mdsColl.update({"name" => _name, "workerName" => _workerName, "release" => _release}, {"$set" => {"name" => _newName}})
@@ -163,6 +171,15 @@ class MongoMDSConnector
 	###========================================
 	def getAllNamed()
 		mdsWithName = @mdsColl.find("workerName" => "", "release" => "").to_a
+		return mdsWithName
+	end
+
+	def getAllOfWorkerByRelease(_release)
+		mdsOfWorker = @mdsColl.find("release" => _release, "name" => "").to_a
+	end
+
+	def getAllNamedRelease(_release)
+		mdsWithName = @mdsColl.find("workerName" => "", "release" => _release).to_a
 		return mdsWithName
 	end
 
