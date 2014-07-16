@@ -13,39 +13,15 @@ $(document).ready(function() {
 						  ];
     var r; // for release name
 	// Additional crossbrowser features
-	var elem = document.getElementById('begindate');
-	if (elem.type === 'text') {
-		$('#begindate').datepicker({dateFormat: 'yy-mm-dd'});
-	}
-	elem = document.getElementById('enddate');
-	if (elem.type === 'text') {
-		$('#enddate').datepicker({dateFormat: 'yy-mm-dd'});
-	}
-    
-	// and here
-	var date = new Date().toISOString();
-	console.log(date);
-	console.log(date.substring(0, 10));
-	
-	var enddate = document.getElementById('enddate');
-	if (enddate.type === 'text') {
-		$('#enddate').datepicker("setDate",date.substring(0, 10));
-	} else {
-		enddate.valueAsDate = new Date();
-	}
-    
-	// and here
-	var bdate = document.getElementById('begindate');
-	var beginDate = new Date();
-	beginDate = new Date(beginDate.getTime() - (30 * 24 * 60 * 60 * 1000));
-
-	if (bdate.type === 'text') {
-		beginDate = beginDate.toISOString();
-		beginDate.substring(0, 10);
-		$('#begindate').datepicker("setDate",beginDate.substring(0, 10));
-	} else {
-		bdate.valueAsDate = beginDate;
-	}
+    var begindate = document.getElementById('begindate'), edate = new Date(), enddate = document.getElementById('enddate');
+    if (begindate.type === 'text') {
+    	$('#begindate').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate",((new Date((new Date()).setFullYear((new Date()).getFullYear()-1))).toISOString()).substring(0, 10));
+	$('#enddate').datepicker({dateFormat: 'yy-mm-dd'}).datepicker("setDate",edate.toISOString().substring(0, 10));
+    }
+    else {
+    	enddate.valueAsDate = edate;
+    	begindate.valueAsDate = (new Date((new Date()).setFullYear((new Date()).getFullYear()-1)));
+    }
 	
 	$('#chartgetter').click(function() {
 		// Parsing answer for chart data query
