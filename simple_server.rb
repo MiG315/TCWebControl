@@ -660,6 +660,17 @@ class MDS
     MongoMDSConnector.instance.setModificationTime(@name, @workerName, @release, (Time.now).strftime("%d.%m.%Y %H:%M:%S"))
   end
 
+  # установить последнее время редактирования
+  # не требуется, т.к. время последнего редактирования устанавливается
+  # автоматически при изменении любого параметра MDS
+  def setLastChange(_time)
+
+  end
+
+  # получить последнее время редактированияы
+  def getLastChange()
+    MongoMDSConnector.instance.getModificationTime(@name, @workerName, @release)
+  end
 end
 
 ###### MDS UTILS ########################
@@ -793,11 +804,19 @@ class Worker
   end
 
   def getMDSLastChange(_release)
-    return MongoDBConnector.instance.getMDSLastChange(@name, _release)
+    #DEPRICATED
+    #return MongoDBConnector.instance.getMDSLastChange(@name, _release)
+    #USE class MDS instaed
+    #puts "DEPRICATED use MDS class instead"
+    mds = MDS.new("", @name, _release)
+    mds.getLastChange()
   end
 
   def setMDSLastChange(_release, _lastChangeDate)
-    MongoDBConnector.instance.setMDSLastChange(@name, _release, _lastChangeDate)
+    # DEPRICATED
+    #MongoDBConnector.instance.setMDSLastChange(@name, _release, _lastChangeDate)
+    #USE class MDS instead
+    puts "DEPRICATED, MDS class set modification time by itse"
   end
 
 end
@@ -933,7 +952,7 @@ class Server < GServer
                   puts "Worker [#{workerName}] ask for new version"
                   # потом переделать, что бы версия бралась из репозитория..
                   workerVersionMajor = "1"
-                  workerVersionMinor = "7"
+                  workerVersionMinor = "14"
                   client.puts workerVersionMajor
                   client.gets
                   client.puts workerVersionMinor
@@ -988,7 +1007,8 @@ class Server < GServer
                 # we should update exclusive DB data
                 numberOfItemsOnWorker = runtimes["data"].count
                 begin
-                  numberOfItemsInDB = @@workerIO[workerName].getRuntime.count  
+				  puts @@workerIO[workerName].getRuntime
+                  numberOfItemsInDB = @@workerIO[workerName].getRuntime.count
                 rescue
                   puts "cant get number of items in DB!"
                   numberOfItemsInDB = 0
@@ -1248,7 +1268,7 @@ end
   end
  
 hostname = '172.20.5.130'
-port = 2001
+port = 2000
 
 serverNew = Server.new(port, hostname, 1000)
 

@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'mongo'
 require 'bson'
+require 'time'
 
 include Mongo
 	def testconnection
@@ -13,8 +14,15 @@ include Mongo
 			puts db.collection_names
 			coll = db.collection("TestLogItem")
 
-			coll.find.each_slice(1) { |row| puts row }
-			puts coll.count
+			#puts coll.find().skip(5000).limit(10).to_a
+			#puts coll.count
+			puts Time.now - 24*60*60*5
+			puts coll.find({"EndTime" => {"$gt" => (Time.now - 30*24*60*60)}, "Name" => "billingtest12_52_new"}).count
+			vTest = coll.find({"EndTime" => {"$gt" => (Time.now - 30*24*60*60)}, "Name" => "billingtest12_52_new"})
+			vTest.each do |x|
+				puts x
+			end
+			# db.blog.posts.findOne( { }, { "comments" : { "$slice" : -10 } } );
 
 			if db.authenticate("admin", "admin") == true
 				puts "Authenticated."

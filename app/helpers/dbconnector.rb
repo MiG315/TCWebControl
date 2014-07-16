@@ -77,6 +77,7 @@ class MongoMDSConnector
 			@mdsColl= @db['mds']
 		rescue
 			puts "No DB with name 'localhost'@27017 are available"
+			raise "Cant connect to DB! Stop execution."
 		end
 	end
 

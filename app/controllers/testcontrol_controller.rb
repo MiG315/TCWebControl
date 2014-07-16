@@ -15,7 +15,7 @@ class TestcontrolController < ApplicationController
 	value = []	
 	# получить список тачек с сервера
 	workerList = ''
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -36,7 +36,7 @@ class TestcontrolController < ApplicationController
 	worker = params[:compname]
 	standList = ''
 	workerList = ''
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -318,7 +318,7 @@ class TestcontrolController < ApplicationController
 	# получаем список тестов
 
 	testlist = ''
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 	# say Hello to server
 	client.puts "MasterOnline"
 	client.gets
@@ -340,7 +340,7 @@ class TestcontrolController < ApplicationController
 	timelimit = params[:timelimit]
 	# получаем с сервера нужные данные
 	mds = Hash.new()
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -377,7 +377,7 @@ class TestcontrolController < ApplicationController
   def getpriority
   	# сделать через обращение к серверу
 	priority = Array.new()
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
@@ -402,7 +402,7 @@ class TestcontrolController < ApplicationController
   def getexectype
   	# сделать через обращение к серверу
   	exectype = Array.new()
-	TCPSocket.open('172.20.5.130', 2001){ |client|
+	TCPSocket.open('172.20.5.130', 2000){ |client|
 		# say Hello to server
 		client.puts "MasterOnline"
 		client.gets
