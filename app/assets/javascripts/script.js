@@ -31,7 +31,7 @@ $(document).ready(function() {
             datasets : []
         };
         var queryString = "";
-		if ((enddate.type === 'text') || (bdate.type === 'text')) {
+		if ((enddate.type === 'text') || (begindate.type === 'text')) {
 			var beg = $('#begindate').datepicker("getDate").toISOString().substring(0, 10);
 			var end = $('#enddate').datepicker("getDate").toISOString().substring(0, 10);
 			queryString = 'testjson/sendjson?begindate='+beg+'&enddate='+end+'&testname='+$('#testname').val();
